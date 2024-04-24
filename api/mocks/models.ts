@@ -21,6 +21,11 @@ const UserSchema:Schema=new Schema({
     Lastname:{
         type:String
     },
+
+    Role:{
+        type:String,
+        default:"user"
+    },
     Password:{
         type:String
     },
