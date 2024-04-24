@@ -10,7 +10,7 @@ const findAll=async(req:any,res:Response)=>{
         const{page,limit}=req.query;
         let pageIn=page?page:0;
         let skipIn=limit?limit:10;
-        return res.status(200).json(await ApplicationService.findAll(req.user._id,pageIn,skipIn));
+        return res.status(200).json(await ApplicationService.findAll(req.user._id,parseInt(pageIn),parseInt(skipIn)));
         
     } catch (error:any) {
         res.status(404).json({"message":error.message} );
