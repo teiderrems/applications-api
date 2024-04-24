@@ -34,7 +34,7 @@ const findOne=async(id:any)=>{
 
 const create= async(client:any)=>{
     const salt=bcrypt.genSaltSync(10);
-    client.password=bcrypt.hashSync(client.Password,salt);
+    client.Password=bcrypt.hashSync(client.Password,salt);
     try {
         return await UserModel.create(client);
     } catch (error:any) {
@@ -75,6 +75,7 @@ const login=async(credentiel:any)=>{
             
             const hashpw=user.Password;
             const islog=bcrypt.compareSync(credentiel.password,(hashpw as string));
+            console.log(islog);
             if (islog) {
                 
                 const token= jwt.sign({_id:user._id,role:user.Role,username:user.Username,Firstname:user?.Firstname,Email:user?.email},process.env.SECRET_KEY!,{
