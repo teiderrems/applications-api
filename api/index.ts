@@ -34,8 +34,8 @@ app.get('/',(req:Request,res:Response)=>{
 app.use("/api/applications",applicationRouter);
 app.use("/api/users",userRouter);
 
-app.listen(5000,()=>{
-    console.log("http://localhost:5000");
+app.listen(3000,()=>{
+    console.log("http://localhost:3000");
 });
 
 export default app;
