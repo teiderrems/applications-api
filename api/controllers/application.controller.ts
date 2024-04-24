@@ -7,7 +7,10 @@ import { isValidObjectId } from "mongoose";
 const findAll=async(req:any,res:Response)=>{
      
     try {
-        return res.status(200).json(await ApplicationService.findAll());
+        const{page,limit}=req.query;
+        let pageIn=page?page:0;
+        let skipIn=limit?limit:10;
+        return res.status(200).json(await ApplicationService.findAll(req.user._id,pageIn,skipIn));
         
     } catch (error:any) {
         res.status(404).json({"message":error.message} );

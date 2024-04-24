@@ -75,10 +75,9 @@ const login=async(credentiel:any)=>{
             
             const hashpw=user.Password;
             const islog=bcrypt.compareSync(credentiel.password,(hashpw as string));
-            console.log(islog);
             if (islog) {
                 
-                const token= jwt.sign({_id:user._id,role:user.Role,username:user.Username,Firstname:user?.Firstname,Email:user?.email},process.env.SECRET_KEY!,{
+                const token= jwt.sign({_id:user._id,role:user.Role,username:user.Username,firstname:user?.Firstname,email:user?.Email},process.env.SECRET_KEY!,{
                     algorithm:"HS256",
                     expiresIn:"10m"
                 });
