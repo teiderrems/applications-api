@@ -1,15 +1,8 @@
 {
-    "version": 2,
-    "builds": [
-      {
-        "src": "src/index.ts",
-        "use": "nodemon"
-      }
-    ],
-    "routes": [
-        {
-          "src": "/(.*)",
-          "dest": "index.js"
-        }
-      ]
-  }
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/api"
+    }
+  ]
+}
