@@ -73,11 +73,11 @@ const getClient=async(username:string)=>{
 const login=async(credentiel:any)=>{
     
     if(credentiel!=null){
-        const user:any=await (getClient(credentiel.username));
+        const user:any=await (getClient(credentiel.Username));
         if (user) {
             
             const hashpw=user.Password;
-            const islog=bcrypt.compareSync(credentiel.password,(hashpw as string));
+            const islog=bcrypt.compareSync(credentiel.Password,(hashpw as string));
             if (islog) {
                 
                 const token= jwt.sign({_id:user._id,role:user.Role,username:user.Username,firstname:user?.Firstname,email:user?.Email},process.env.SECRET_KEY!,{

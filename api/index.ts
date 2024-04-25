@@ -17,7 +17,9 @@ app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 main().then(res=>console.log("connexion réussit")).catch(err=>console.log(err.message));
 
-app.use(cors());
+app.use(cors({
+    origin:"http://localhost:3000"
+}));
 app.use((error: any,req:Request,res:Response,next:NextFunction)=>{
     if(error){
         res.status(500).json({"message":error.message});
