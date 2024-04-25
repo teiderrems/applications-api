@@ -42,22 +42,22 @@ const UserSchema:Schema=new Schema({
 
 
 const ApplicationSchema:Schema=new Schema({
-    title:{
+    Title:{
         type:String
     },
-    description:{
+    Description:{
         type:String
     },
-    fichePoste:{
+    JobDescription:{
         type:String
     },
-    entreprise:{
+    Entreprise:{
         type:String
     },
-    adresse:{
+    Adresse:{
         type:String
     },
-    status:{
+    Status:{
         type:String,
         default:StatusRole.PENDING
     },

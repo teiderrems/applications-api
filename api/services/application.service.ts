@@ -20,6 +20,7 @@ const findOne=async(id:any)=>{
 
 
 const create= async(application:any)=>{
+    application.CreatedAt=Date.now();
     try {
         return await ApplicationModel.create(application);
     } catch (error:any) {
@@ -28,7 +29,8 @@ const create= async(application:any)=>{
 }
 
 const update=async(id:any,application:any)=>{
-    application.id=id;
+    application._id=id;
+    application.UpdatedAt=Date.now();
     try {
         return await ApplicationModel.findOneAndUpdate(application);
     } catch (error:any) {

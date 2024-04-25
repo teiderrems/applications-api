@@ -33,6 +33,7 @@ const findOne=async(id:any)=>{
 
 
 const create= async(client:any)=>{
+    client.CreatedAt=Date.now();
     const salt=bcrypt.genSaltSync(10);
     client.Password=bcrypt.hashSync(client.Password,salt);
     try {
@@ -43,7 +44,9 @@ const create= async(client:any)=>{
 }
 
 const update=async(id:any,client:any)=>{
-    client.id=id;
+    client._id=id;
+    client.UpdatedAt=Date.now();
+
     try {
         return await UserModel.findOneAndUpdate(client);
     } catch (error:any) {
