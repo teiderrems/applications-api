@@ -18,7 +18,7 @@ app.use(bodyParser.json());
 main().then(res=>console.log("connexion réussit")).catch(err=>console.log(err.message));
 
 app.use(cors({
-    origin:"http://localhost:3000"
+    origin:["http://localhost:3000","https://applications-seven.vercel.app"]
 }));
 app.use((error: any,req:Request,res:Response,next:NextFunction)=>{
     if(error){
