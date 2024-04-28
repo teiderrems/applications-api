@@ -17,9 +17,10 @@ app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 main().then(res=>console.log("connexion réussit")).catch(err=>console.log(err.message));
 
-app.use(cors({
+/* {
     origin:["http://localhost:3000","https://applications-seven.vercel.app"]
-}));
+} */
+app.use(cors()); 
 app.use((error: any,req:Request,res:Response,next:NextFunction)=>{
     if(error){
         res.status(500).json({"message":error.message});
@@ -36,8 +37,8 @@ app.get('/',(req:Request,res:Response)=>{
 app.use("/api/applications",applicationRouter);
 app.use("/api/users",userRouter);
 
-app.listen(3000,()=>{
-    console.log("http://localhost:3000");
+app.listen(5000,()=>{
+    console.log("http://localhost:5000");
 });
 
 export default app;
