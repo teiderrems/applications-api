@@ -20,7 +20,9 @@ main().then(res=>console.log("connexion réussit")).catch(err=>console.log(err.m
 /* {
     origin:["http://localhost:3000","https://applications-seven.vercel.app"]
 } */
-app.use(cors()); 
+app.use(cors({
+    origin:["http://localhost:3000","https://applications-custom.vercel.app","https://applications-e439krozz-teiderrems-projects.vercel.app/"]
+})); 
 app.use((error: any,req:Request,res:Response,next:NextFunction)=>{
     if(error){
         res.status(500).json({"message":error.message});

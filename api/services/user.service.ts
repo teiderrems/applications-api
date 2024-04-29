@@ -48,7 +48,7 @@ const update=async(id:any,client:any)=>{
     client.UpdatedAt=Date.now();
 
     try {
-        return await UserModel.findOneAndUpdate(client);
+        return await UserModel.updateOne({_id:client._id},client);
     } catch (error:any) {
         return error.message;
     }
@@ -56,7 +56,7 @@ const update=async(id:any,client:any)=>{
 
 const remove=async(id:any)=>{
     try {
-        return await UserModel.findByIdAndDelete(id);
+        return await UserModel.deleteOne({_id:id});
     } catch (error:any) {
         return error.message;
     }

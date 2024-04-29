@@ -31,8 +31,10 @@ const create= async(application:any)=>{
 const update=async(id:any,application:any)=>{
     application._id=id;
     application.UpdatedAt=Date.now();
+    console.log(application);
     try {
-        return await ApplicationModel.findOneAndUpdate(application);
+        const res= await ApplicationModel.updateOne({_id:application._id},application);
+        return res;
     } catch (error:any) {
         return error.message;
     }
