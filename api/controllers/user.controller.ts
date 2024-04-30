@@ -31,6 +31,7 @@ const findOne = async (req: any, res: Response) => {
 
 
 const create = async (req: Request, res: Response) => {
+    
     if(req.body.Username){
         try {
             return res.status(201).json(await UserService.create(req.body));
