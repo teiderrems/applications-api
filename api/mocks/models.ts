@@ -61,6 +61,9 @@ const ApplicationSchema:Schema=new Schema({
         type:String,
         default:StatusRole.PENDING
     },
+    TypeContrat:{
+        type:String
+    },
     CreatedAt:{
         type:Date
     },
