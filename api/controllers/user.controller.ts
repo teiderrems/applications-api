@@ -4,7 +4,7 @@ import * as UserService from "../services/user.service"
 import { isValidObjectId } from "mongoose";
 
 const findAll = async (req: any, res: Response) => {
-    if (req.user && req.user.role=="admin"){
+    if (req.user && req.user.role=='admin'){
         try {
             return res.status(200).json(await UserService.findAll());
         } catch (error: any) {

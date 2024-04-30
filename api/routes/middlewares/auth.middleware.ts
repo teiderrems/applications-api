@@ -23,7 +23,7 @@ const Authorize=(req:any,res:Response,next:NextFunction)=>{
     }
 
     if (decode) {
-        req.user={_id:decode._id,username:decode.username,email:decode?.email,firstname:decode?.firstname};
+        req.user={_id:decode._id,username:decode.username,role:decode.role,email:decode?.email,firstname:decode?.firstname};
         next();
         return;
     }
