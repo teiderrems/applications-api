@@ -11,6 +11,7 @@ userRouter.post("/",UserController.create);
 userRouter.put("/:id",Authorize,UserController.update);
 userRouter.delete("/:id",Authorize,UserController.remove);
 userRouter.post("/auth",UserController.login);
+userRouter.post("/refresh_token",UserController.refresh_token);
 
 
 export default userRouter;

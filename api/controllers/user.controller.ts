@@ -101,4 +101,17 @@ const login = async (req: Request, res: Response) => {
         return res.status(404).json({"message":"NotFound"});
 }
 
-export { findAll, findOne, create, update, remove, login }
+const refresh_token=async(req:Request,res:Response)=>{
+    if (req.body) {
+        try {
+            return res.status(201).json(UserService.refresh_token(req.body.refresh));
+
+        } catch (error:any) {
+            return res.status(404).json({"message":error.message});
+
+        }
+    }
+    return res.status(401).json({ "message": 'Unauthorize' });
+}
+
+export { findAll, findOne, create, update, remove, login ,refresh_token}

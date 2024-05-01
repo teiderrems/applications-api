@@ -75,7 +75,6 @@ const login=async(credentiel:any)=>{
     if(credentiel!=null){
         const user:any=await (getClient(credentiel.Username));
         if (user) {
-            
             const hashpw=user.Password;
             const islog=bcrypt.compareSync(credentiel.Password,(hashpw as string));
             if (islog) {
@@ -84,7 +83,14 @@ const login=async(credentiel:any)=>{
                     algorithm:"HS256",
                     expiresIn:"10m"
                 });
-                return token;
+                const refresh=jwt.sign({_id:user._id,role:user.Role,username:user.Username,firstname:user?.Firstname,email:user?.Email},process.env.SECRET_KEY!,{
+                    algorithm:"HS256",
+                    expiresIn:"1d"
+                });
+                return {
+                    token,
+                    refresh
+                };
             }
             return undefined;
         }
@@ -93,5 +99,21 @@ const login=async(credentiel:any)=>{
     return undefined;
 }
 
+const refresh_token=(refresh_t:string)=>{
+    const user = JSON.parse(atob(refresh_t.split('.')[1]));
+    const token= jwt.sign({_id:user._id,role:user.role,username:user.username,firstname:user?.firstname,email:user?.email},process.env.SECRET_KEY!,{
+        algorithm:"HS256",
+        expiresIn:"10m"
+    });
+    const refresh=jwt.sign({_id:user._id,role:user.Role,username:user.Username,firstname:user?.Firstname,email:user?.Email},process.env.SECRET_KEY!,{
+        algorithm:"HS256",
+        expiresIn:"1d"
+    });
+    return {
+        token,
+        refresh
+    };
+}
 
-export {findAll,findOne,create,update,remove,login}
+
+export {findAll,findOne,create,update,remove,login,refresh_token}
