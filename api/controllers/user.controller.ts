@@ -6,7 +6,16 @@ import { isValidObjectId } from "mongoose";
 const findAll = async (req: any, res: Response) => {
     if (req.user && req.user.role=='admin'){
         try {
-            return res.status(200).json(await UserService.findAll());
+            const {page,limit}=req.query;
+            let pageIn=parseInt(page)?parseInt(page):0;
+            let skipIn=parseInt(limit)?parseInt(limit):10;
+            const data=await UserService.findAll(pageIn,skipIn);
+            const val=pageIn*(skipIn);
+            return res.status(200).json({
+                data:data,
+                next:((data.count) && (data.count>skipIn))?`https://${req.headers.host}/api/applications?page=${(val<data.count)?(pageIn++):pageIn}&limit=${limit}`:null,
+                prev:((data.count) && (data.count>skipIn))?`https://${req.headers.host}/api/applications?page=${(pageIn--)>0?(pageIn--):pageIn}&limit=${limit}`:null
+            });
         } catch (error: any) {
 
             return res.status(404).json({"message":error.message});
@@ -80,10 +89,10 @@ const remove = async (req: Request, res: Response) => {
 
 const login = async (req: Request, res: Response) => {
     if (req.body){
-        const token = await UserService.login(req.body);
-        if (token) {
+        const data = await UserService.login(req.body);
+        if (data) {
             try {
-                return res.status(201).json({ "token": token });
+                return res.status(201).json(data);
 
             } catch (error:any) {
                 return res.status(404).json({"message":error.message});

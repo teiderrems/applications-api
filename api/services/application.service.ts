@@ -4,7 +4,11 @@ import { ApplicationModel } from "../mocks/models";
 const findAll=async(user:String,page:number,skip:number)=>{
     try {
         let offset:number=page*skip;
-        return await ApplicationModel.find({Owner:user}).limit(skip).skip(offset);
+        let data=await ApplicationModel.find({Owner:user}).limit(skip).skip(offset);
+        return {
+            applications:data,
+            count:(await ApplicationModel.find({Owner:user})).length
+        };
     } catch (error:any) {
         return error.message;
     }

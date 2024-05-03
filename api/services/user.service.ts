@@ -15,9 +15,14 @@ interface Client{
     Password:String
 };
 
-const findAll=async()=>{
+const findAll=async(page:number,skip:number)=>{
     try {
-        return await UserModel.find({});
+        let offset:number=page*skip;
+        let data=await UserModel.find({}).limit(skip).skip(offset);
+        return {
+            users:data,
+            count:(await UserModel.find({})).length
+        };
     } catch (error:any) {
         return error.message;
     }
