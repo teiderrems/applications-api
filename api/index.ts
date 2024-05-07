@@ -29,6 +29,9 @@ app.use((error: any,req:Request,res:Response,next:NextFunction)=>{
     }
 });
 app.use(helmet());
+app.use('/',(req:Request,res:Response)=>{
+    res.status(200).send("<h1><i> Welcome</i></h1>");
+})
 
 app.use("/api/applications",applicationRouter);
 app.use("/api/users",userRouter);
