@@ -2,6 +2,8 @@ import { UserModel } from "../mocks/models";
 import bcrypt from "bcrypt"
 
 import * as jwt from "jsonwebtoken"
+import * as sgMail from '@sendgrid/mail';
+
 
 import dotenv from "dotenv";
 
@@ -42,7 +44,22 @@ const create= async(client:any)=>{
     const salt=bcrypt.genSaltSync(10);
     client.Password=bcrypt.hashSync(client.Password,salt);
     try {
-        return await UserModel.create(client);
+        const user=await UserModel.create(client);
+        sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
+        const msg = {
+        to: client.Email,
+        from: 'raoul.teida@facsciences-uy1.cm',
+        subject: 'Register',
+        text: 'Welcome',
+        html: '<strong>Your account is added successfully. Thank you for choosing us for a good history of your applications</strong>',
+        }
+        try {
+            const res= await sgMail.send(msg);
+            console.log("Email envoyé avec succes",res);
+        } catch (error) {
+            console.log(error);
+        }
+        return user;
     } catch (error:any) {
         return error.message;
     }
