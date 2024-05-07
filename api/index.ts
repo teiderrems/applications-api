@@ -17,11 +17,8 @@ app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 main().then(res=>console.log("connexion réussit")).catch(err=>console.log(err.message));
 
-/* {
-    origin:["http://localhost:3000","https://applications-seven.vercel.app"]
-} */
 app.use(cors({
-    origin:["http://localhost:3000","https://applications-custom.vercel.app","https://applications-e439krozz-teiderrems-projects.vercel.app/"]
+    origin:["http://localhost:3000","https://applications-custom.vercel.app"]
 })); 
 app.use((error: any,req:Request,res:Response,next:NextFunction)=>{
     if(error){
@@ -32,9 +29,6 @@ app.use((error: any,req:Request,res:Response,next:NextFunction)=>{
     }
 });
 app.use(helmet());
-app.get('/',(req:Request,res:Response)=>{
-    res.status(200).send("<h1>Hello world</h1>");
-});
 
 app.use("/api/applications",applicationRouter);
 app.use("/api/users",userRouter);
