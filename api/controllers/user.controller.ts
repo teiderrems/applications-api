@@ -106,7 +106,7 @@ export default class UserController{
     
     public async login(req: Request, res: Response){
         if (req.body){
-            const data = await new UserService().login(req.body);
+            const data = await new UserService().login(req);
             if (data) {
                 try {
                     return res.status(201).json(data);
@@ -130,7 +130,7 @@ export default class UserController{
     public async refresh_token(req:Request,res:Response){
         if (req.body) {
             try {
-                return res.status(201).json(new UserService().refresh_token(req.body.refresh));
+                return res.status(201).json(new UserService().refresh_token(req));
     
             } catch (error:any) {
                 return res.status(404).json({"message":error.message});

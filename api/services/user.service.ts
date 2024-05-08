@@ -3,6 +3,7 @@ import bcrypt from "bcrypt"
 
 import * as jwt from "jsonwebtoken"
 import sgMail from '@sendgrid/mail';
+import { Request } from "express";
 
 
 import dotenv from "dotenv";
@@ -99,8 +100,8 @@ export default class UserService {
         }
     }
     
-    public async login(credentiel:any){
-        
+    public async login(req:Request){
+        const credentiel=req.body;
         if(credentiel!=null){
             const user:User=await (this.getClient(credentiel.Username));
             if (user) {
@@ -108,11 +109,11 @@ export default class UserService {
                 const islog=bcrypt.compareSync(credentiel.Password,(hashpw as string));
                 if (islog) {
                     
-                    const token= jwt.sign({_id:user._id,profile:user.Profile,role:user.Role,username:user.Username,firstname:user?.Firstname,email:user?.Email},process.env.SECRET_KEY!,{
+                    const token= jwt.sign({_id:user._id,profile:(new UploadFile().getProfileUrl(req as Request,user.Profile as string)),role:user.Role,username:user.Username,firstname:user?.Firstname,email:user?.Email},process.env.SECRET_KEY!,{
                         algorithm:"HS256",
                         expiresIn:"10m"
                     });
-                    const refresh=jwt.sign({_id:user._id,profile:user.Profile,role:user.Role,username:user.Username,firstname:user?.Firstname,email:user?.Email},process.env.SECRET_KEY!,{
+                    const refresh=jwt.sign({_id:user._id,profile:(new UploadFile().getProfileUrl(req as Request,user.Profile as string)),role:user.Role,username:user.Username,firstname:user?.Firstname,email:user?.Email},process.env.SECRET_KEY!,{
                         algorithm:"HS256",
                         expiresIn:"1d"
                     });
@@ -128,9 +129,11 @@ export default class UserService {
         return undefined;
     }
     
-    public async refresh_token(refresh_t:string){
+    public async refresh_token(req:Request){
+        const refresh_t=req.body.refresh;
+        console.log(refresh_t);
         const user = JSON.parse(atob(refresh_t.split('.')[1]));
-        const token= jwt.sign({_id:user._id,role:user.role,username:user.username,firstname:user?.firstname,email:user?.email},process.env.SECRET_KEY!,{
+        const token= jwt.sign({_id:user._id,role:user.role,username:user.username,profile:(new UploadFile().getProfileUrl(req as Request,user.Profile)),firstname:user?.firstname,email:user?.email},process.env.SECRET_KEY!,{
             algorithm:"HS256",
             expiresIn:"10m"
         });

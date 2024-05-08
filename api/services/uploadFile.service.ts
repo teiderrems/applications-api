@@ -14,7 +14,7 @@ export default class UploadFile{
 
 
     public getProfileUrl(req:Request,profileUrl:string):string{
-        return `${req.protocol}//${req.headers.host}/${profileUrl}`;
+        return `${req.protocol}://${req.headers.host}/${profileUrl}`;
     }
 
     public removeProfile(profileUrl:string):boolean{
