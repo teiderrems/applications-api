@@ -5,7 +5,7 @@ import Authorize from "./middlewares/auth.middleware";
 
 const applicationRouter=Router();
 
-applicationRouter.get("/",Authorize,new ApplicationController().findAll);
+applicationRouter.get("/",Authorize,async()=>await( new ApplicationController().findAll));
 applicationRouter.get("/:id",new ApplicationController().findOne);
 applicationRouter.post("/",Authorize,new ApplicationController().create);
 applicationRouter.put("/:id",Authorize,new ApplicationController().update);
