@@ -1,4 +1,4 @@
-import { UserModel } from "../mocks/models";
+import { User, UserModel } from "../mocks/models";
 import bcrypt from "bcrypt"
 
 import * as jwt from "jsonwebtoken"
@@ -6,6 +6,7 @@ import sgMail from '@sendgrid/mail';
 
 
 import dotenv from "dotenv";
+import UploadFile from "./uploadFile.service";
 
 dotenv.config();
 
@@ -19,7 +20,7 @@ interface Client{
 
 
 export default class UserService {
-    findAll=async(page:number,skip:number)=>{
+    public async findAll(page:number,skip:number){
         try {
             let offset:number=page*skip;
             let data=await UserModel.find({}).limit(skip).skip(offset);
@@ -32,7 +33,7 @@ export default class UserService {
         }
     }
     
-    findOne=async(id:any)=>{
+    public async findOne(id:any){
         try {
             return await UserModel.findById(id);
         } catch (error:any) {
@@ -41,7 +42,7 @@ export default class UserService {
     }
     
     
-     create=async(client:any)=>{
+    public async create(client:any){
         client.CreatedAt=Date.now();
         const salt=bcrypt.genSaltSync(10);
         client.Password=bcrypt.hashSync(client.Password,salt);
@@ -66,47 +67,52 @@ export default class UserService {
         }
     }
     
-    update=async(id:any,client:any)=>{
+    public async update(id:any,client:any){
         client._id=id;
         client.UpdatedAt=Date.now();
-    
         try {
+            const user=await UserModel.findById(id);
+            if (user!.Profile!=client.Profile) {
+                new UploadFile().removeProfile(user!.Profile as string);
+            }
             return await UserModel.updateOne({_id:client._id},client);
         } catch (error:any) {
             return error.message;
         }
     }
     
-     remove=async(id:any)=>{
+     public async remove(id:any){
         try {
+            const user=await UserModel.findById(id);
+            new UploadFile().removeProfile(user!.Profile as string);
             return await UserModel.deleteOne({_id:id});
         } catch (error:any) {
             return error.message;
         }
     }
     
-    getClient=async(username:string)=>{
+    public async getClient(username:string):Promise<User>{
         try {
-            return (((await UserModel.findOne({Email:username}))||(await UserModel.findOne({Username:username}))) as Client);
+            return (((await UserModel.findOne({Email:username}))||(await UserModel.findOne({Username:username}))) as User);
         } catch (error:any) {
             return error.message;
         }
     }
     
-     login=async(credentiel:any)=>{
+    public async login(credentiel:any){
         
         if(credentiel!=null){
-            const user:any=await (this.getClient(credentiel.Username));
+            const user:User=await (this.getClient(credentiel.Username));
             if (user) {
                 const hashpw=user.Password;
                 const islog=bcrypt.compareSync(credentiel.Password,(hashpw as string));
                 if (islog) {
                     
-                    const token= jwt.sign({_id:user._id,role:user.Role,username:user.Username,firstname:user?.Firstname,email:user?.Email},process.env.SECRET_KEY!,{
+                    const token= jwt.sign({_id:user._id,profile:user.Profile,role:user.Role,username:user.Username,firstname:user?.Firstname,email:user?.Email},process.env.SECRET_KEY!,{
                         algorithm:"HS256",
                         expiresIn:"10m"
                     });
-                    const refresh=jwt.sign({_id:user._id,role:user.Role,username:user.Username,firstname:user?.Firstname,email:user?.Email},process.env.SECRET_KEY!,{
+                    const refresh=jwt.sign({_id:user._id,profile:user.Profile,role:user.Role,username:user.Username,firstname:user?.Firstname,email:user?.Email},process.env.SECRET_KEY!,{
                         algorithm:"HS256",
                         expiresIn:"1d"
                     });
@@ -122,7 +128,7 @@ export default class UserService {
         return undefined;
     }
     
-   refresh_token(refresh_t:string){
+    public async refresh_token(refresh_t:string){
         const user = JSON.parse(atob(refresh_t.split('.')[1]));
         const token= jwt.sign({_id:user._id,role:user.role,username:user.username,firstname:user?.firstname,email:user?.email},process.env.SECRET_KEY!,{
             algorithm:"HS256",

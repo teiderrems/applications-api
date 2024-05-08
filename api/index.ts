@@ -7,6 +7,7 @@ import applicationRouter from "./routes/application.route";
 import bodyParser from "body-parser";
 import mongoose from "mongoose";
 import helmet from 'helmet';
+import path from "path";
 
 mongoose.Promise = global.Promise
 const app:Express=express();
@@ -16,6 +17,7 @@ app.use(morgan('tiny'));
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 main().then(res=>console.log("connexion réussit")).catch(err=>console.log(err.message));
+app.use(express.static(path.join('.', 'public')))
 
 app.use(cors({
     origin:["https://applications-custom.vercel.app","http://localhost:3000"]
@@ -32,6 +34,10 @@ app.use(helmet());
 
 app.use("/api/applications",applicationRouter);
 app.use("/api/users",userRouter);
+app.use('/:profile/:filename',(req:Request,res:Response)=>{
+    const filePath=path.resolve('.','public',req.params.profile,req.params.filename);
+    return res.status(200).sendFile(filePath);
+})
 
 app.use('/',(req:Request,res:Response)=>{
     res.status(200).send("<h1><i> Welcome</i></h1>");

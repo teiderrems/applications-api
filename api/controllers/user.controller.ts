@@ -2,23 +2,32 @@ import { Request, Response } from "express"
 
 import UserService from "../services/user.service"
 import { isValidObjectId } from "mongoose";
+import UploadFile from "../services/uploadFile.service";
+import { User } from "../mocks/models";
 
 
 
 export default class UserController{
 
     public async findAll(req: any, res: Response){
-        if (req.user && req.user.role=='admin'){
+        if ((req.user) && req.user.role=='admin'){
             try {
                 const {page,limit}=req.query;
                 let pageIn=parseInt(page)?parseInt(page):0;
                 let skipIn=parseInt(limit)?parseInt(limit):10;
-                const data=await new UserService().findAll(pageIn,skipIn);
+                const data:{
+                    users:User[],
+                    count:number
+                }=await new UserService().findAll(pageIn,skipIn);
                 const val=pageIn*(skipIn);
                 return res.status(200).json({
-                    data:data,
+                    data:data.users.map(u=>{
+                       
+                        u.Profile=u.Profile?new UploadFile().getProfileUrl(req as Request,u.Profile):u.Profile;
+                        return u;
+                    }),
                     next:((data.count) && (data.count>skipIn))?`${req.protocol}//${req.headers.host}/api/applications?page=${(val<data.count)?(pageIn++):pageIn}&limit=${limit}`:null,
-                    prev:((data.count) && (data.count>skipIn))?`${req.protocol}//${req.headers.host}/api/applications?page=${(pageIn--)>0?(pageIn--):pageIn}&limit=${limit}`:null
+                    prev:((data.count) && (data.count>skipIn))?`${req.protocol}/${req.headers.host}/api/applications?page=${(pageIn--)>0?(pageIn--):pageIn}&limit=${limit}`:null
                 });
             } catch (error: any) {
     
@@ -32,7 +41,9 @@ export default class UserController{
         if(req.user){
             const id:String=req.user._id;
             try {
-                return res.status(200).json({user:await new UserService().findOne(req.params.id)});
+                const user:User=await new UserService().findOne(req.params.id);
+                user.Profile=new UploadFile().getProfileUrl(req as Request,user.Profile as string);
+                return res.status(200).json({user});
     
             } catch (error: any) {
                 return res.status(404).json({"message":error.message});
@@ -47,6 +58,7 @@ export default class UserController{
         
         if(req.body.Username){
             try {
+                req.body.Profile= req.file?(await new UploadFile().getPath(req.file)):null;
                 return res.status(201).json(await new UserService().create(req.body));
     
             } catch (error: any) {
@@ -65,6 +77,7 @@ export default class UserController{
                 return;
             }
             try {
+                req.body.Profile= req.file? await new UploadFile().getPath(req.file):req.body.Profile;
                 return res.status(201).json(await new UserService().update(req.params.id, req.body));
             } catch (error: any) {
                 return res.status(404).json({"message":error.message});

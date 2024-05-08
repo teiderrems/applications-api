@@ -2,7 +2,7 @@ import { ApplicationModel } from "../mocks/models";
 
 export default class ApplicationService{
 
-    findAll=async(user:String,page:number,skip:number)=>{
+    public async findAll(user:String,page:number,skip:number){
         try {
             let offset:number=page*skip;
             let data=await ApplicationModel.find({Owner:user}).limit(skip).skip(offset);
@@ -15,7 +15,7 @@ export default class ApplicationService{
         }
     }
     
-    findOne=async(id:any)=>{
+    public async findOne(id:any){
         try {
             return await ApplicationModel.findById(id);
         } catch (error:any) {
@@ -24,7 +24,7 @@ export default class ApplicationService{
     }
     
     
-    create= async(application:any)=>{
+    public async create(application:any){
         application.CreatedAt=Date.now();
         try {
             return await ApplicationModel.create(application);
@@ -33,7 +33,7 @@ export default class ApplicationService{
         }
     }
     
-    update=async(id:any,application:any)=>{
+    public async update(id:any,application:any){
         application._id=id;
         application.UpdatedAt=Date.now();
         console.log(application);
@@ -45,7 +45,7 @@ export default class ApplicationService{
         }
     }
     
-    remove=async(id:any)=>{
+    public async remove(id:any){
         try {
             return await ApplicationModel.findByIdAndDelete(id);
         } catch (error:any) {

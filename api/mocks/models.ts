@@ -6,6 +6,34 @@ enum StatusRole{
     DENIED='denied'
 }
 
+export interface User{
+    _id?:string;
+    Username?:string;
+    Firstname?:string;
+    Email?:string;
+    Lastname?:string;
+    Role?:string;
+    Password?:string;
+    Profile?:string;
+    CreatedAt?:Date;
+    UpdatedAt?:Date;
+}
+
+export interface Application{
+    _id?:string;
+    Title?:string;
+    Description?:string;
+    JobDescription?:string;
+    Entreprise?:string;
+    Adresse?:string;
+    Status?:string;
+    TypeContrat?:string;
+    Owner?:string;
+    CreatedAt?:Date;
+    UpdatedAt?:Date;
+}
+
+
 const UserSchema:Schema=new Schema({
     Username:{
         type:String,
@@ -29,19 +57,22 @@ const UserSchema:Schema=new Schema({
     Password:{
         type:String
     },
-    CreatedAt:{
-        type:Date
-    },
-    UpdatedAt:{
-        type:Date
+    Profile:{
+        type:String
     }
-},{
-    versionKey:false
+},
+{
+    versionKey:false,
+    timestamps:{
+        createdAt:'CreatedAt',
+        updatedAt:'UpdatedAt'
+    }
 })
 
 
 
 const ApplicationSchema:Schema=new Schema({
+
     Title:{
         type:String
     },
@@ -64,16 +95,15 @@ const ApplicationSchema:Schema=new Schema({
     TypeContrat:{
         type:String
     },
-    CreatedAt:{
-        type:Date
-    },
-    UpdatedAt:{
-        type:Date
-    },
     Owner:{
         type:String
     }
-},{versionKey:false});
+},{versionKey:false,
+    timestamps:{
+        createdAt:'CreatedAt',
+        updatedAt:'UpdatedAt'
+    }
+});
 
 
 const ApplicationModel=model('applications',ApplicationSchema);
