@@ -55,7 +55,6 @@ export default class UserController{
     
     
     public async create(req: Request, res: Response){
-        
         if(req.body.Username){
             try {
                 req.body.Profile= req.file?(await new UploadFile().getPath(req.file)):null;
