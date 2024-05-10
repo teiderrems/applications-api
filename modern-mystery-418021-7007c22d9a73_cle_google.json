@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "modern-mystery-418021",
+  "private_key_id": "7007c22d9a73bc1f1fab421173d86fc826634449",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCtHqmwyaDksS0T\n7H3HzQtSbNOF/CP2vFGpmdxmRDZr8NCe8kCAedDtlYpAQ9bF1Nc/l9FGq+Wkx/R4\nKN/k02wa9v9olTkmzqaTfatipFSHUnBX5eLN7OaVzgJBiW83uDsO4pqJbqgFH/LV\nKq2N0eFjhHxWxhdhYnawDVK23G1C8p+BsCgpYvC8vdC7mtoxm7aAnBewEJVAkazQ\n0EeUEelJ9bKrCtgbVrTyiRA3LR10Dh5FLPbauyMJzm6uGXVVa3qEYB0cpJdPiIQ0\npSqrm5XP43OFZ1LsVfcgZY9dLh6UV7FE5kcqxgucARFimXyPmWrjMQ8l624cO4AF\n0NgOl+TXAgMBAAECggEATwm9zYHwnBisDPme33ak4aff1r8sKD0IR5eAgYxJEHTs\nunS9sCptkdsBOKAAUWgAMf99Q3e9q8LCwY1f0xgXtiPorfXbFvWoJZRth+ag1Pt1\nYRwKtZugFursKsG1bkoFZKFejrpfqZ9RfbMzc5lL/uSA5BkimYqbx3r9tZDjrXlZ\nuukWULtdNO4gBBGUBjns9sZ1XEqiqyOeSqpIIe/dbvmnfkJFh8Q+heBEXdyuvgfe\nkbSscQDu7ZsQtsG2QHm6jH/B8PwnODTfc0MyxGmwdAs+cNoUQfb5NNVjvScTNbpQ\nL5XwELBb58zBFjjlk17EcOo3tm0E7+RlgD99DR/PAQKBgQDY6REuANqli/fDhpbq\neCOSBJ3arFKzwdzRvXbSoIyYYadxI2w7CkPacovk4xgrJ1kWRqtiXqfkwyNb6ujQ\nF0f5MXNqIDgt5W+F7e87BaW9yPYZgAoslpigl4mIAmPB/d07QrHrRlD2vPNIfh/B\n9CYC+LUzM/I+tDI+lHw+XxwGgQKBgQDMUVxb+qQ4d8AQHUse04FWpDGJw0pZ8kJv\nPCxRXZRLUDLj67mm4UPx0EvLqgrLR18iP0fRcHzBOAvc8GVDk3DZl8Mw3uNJAqOr\nbbp6ohBBx6IqyIBmIrgQ7y65jTHVS62z6UEribFwJNagRPor2bEYZoVm8mLoKZe1\nGGjS5uAvVwKBgCcU1yOSw9JQBbQU69wTCVWlv0tHAR+iLkcb++y3QJ2z+pdH6pg4\noUEaoln7EL+1tzdsRDTVGSr+fcBx8sCLcUxUvJbCd1zNmepnlFLuEY7ARpcRmsOt\n3pIQu5bl11N8if/DZIsfgDb0lGDbWJ15f9/JL9yp31us2+CqoDgcqtABAoGAXQg6\n5sLEndWhBXVhLCMgRGQ1DkZ3B2ew6lda0p2qlXRqB6/g8+SkfGnc6Vp+2bqgzcZE\nnE/87jnn5O0tHsz22I0q2ojSsv7ZqYgoHgjHIDyXUaXEGT171HIkM2bgJv/zkvUF\nsJ5cxfRwKb/erbLM2ZBs88gwUwgFRPddW5K2x7cCgYEAnubYc28jwIvFnnjBYUoJ\nB/aTK2Up33EYMBg6tLITnKYe6mmkoHtf9FoJvhJELK4lXh2fvvOd7ktqLbZfnkny\npOiAy8JLEPmaA7FyIJ64jqKR7LNL3pCZjuI2rx29YOT036gxfcbmIOw1lGQqXAL/\nMgOty6GMNIa596gJdpdZGV0=\n-----END PRIVATE KEY-----\n",
+  "client_email": "teida-noutsa@modern-mystery-418021.iam.gserviceaccount.com",
+  "client_id": "107703056145935449800",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/teida-noutsa%40modern-mystery-418021.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
