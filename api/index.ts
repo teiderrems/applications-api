@@ -40,12 +40,12 @@ app.use(helmet());
 app.use("/api/applications",applicationRouter);
 app.use("/api/users",userRouter);
 app.use('/profile/:profileId',async(req:Request,res:Response)=>{
-    const response:File=await new UploadFile().getFile(req.params.profileId);
-    const data=Buffer.from(await response.arrayBuffer()).toString('base64');
-    res.setHeader('Content-Type', response.type);
-    res.setHeader('Content-Encoding','base64');
-    res.setHeader('Accept-Encoding','base64');
-    return res.status(200).send(data);
+    const response=await new UploadFile().getFile(req.params.profileId);
+    if ((response as string).includes('data')) {
+      res.setHeader('Content-Type', (response as string).split(';')[0].split(':')[1]);
+      return res.status(200).send(response);
+    }
+    res.status(404).send(response);
 })
 
 app.use('/',(req:Request,res:Response)=>{

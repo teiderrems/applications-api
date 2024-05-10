@@ -37,7 +37,7 @@ export default class UserController{
             const id:String=req.user._id;
             try {
                 const user:User=await new UserService().findOne(req.params.id);
-                user.Profile=`${req.protocol}//${req.headers.host}/profile/${user.ProfileId}`;
+                user.Profile=`${req.protocol}://${req.headers.host}/profile/${user.ProfileId}`;
                 return res.status(200).json({user});
     
             } catch (error: any) {

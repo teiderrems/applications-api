@@ -98,8 +98,8 @@ export default class UserService {
         const credentiel=req.body;
         if(credentiel!=null){
             const user:User=await (this.getClient(credentiel.Username));
-            user.Profile=`${req.protocol}//${req.headers.host}/profile/${user.ProfileId}`;
             if (user) {
+                user.Profile=`${req.protocol}://${req.headers.host}/profile/${user.ProfileId}`;
                 const hashpw=user.Password;
                 const islog=bcrypt.compareSync(credentiel.Password,(hashpw as string));
                 if (islog) {
