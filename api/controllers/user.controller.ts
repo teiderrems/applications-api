@@ -5,8 +5,6 @@ import { isValidObjectId } from "mongoose";
 import UploadFile from "../services/uploadFile.service";
 import { User } from "../mocks/models";
 
-
-
 export default class UserController{
 
     public async findAll(req: any, res: Response){
@@ -20,33 +18,30 @@ export default class UserController{
                     count:number
                 }=await new UserService().findAll(pageIn,skipIn);
                 const val=pageIn*(skipIn);
+
                 return res.status(200).json({
-                    data:data.users.map(u=>{
-                       
-                        u.Profile=u.Profile?new UploadFile().getProfileUrl(req as Request,u.Profile):u.Profile;
-                        return u;
-                    }),
+                    data:data,
                     next:((data.count) && (data.count>skipIn))?`${req.protocol}//${req.headers.host}/api/applications?page=${(val<data.count)?(pageIn++):pageIn}&limit=${limit}`:null,
                     prev:((data.count) && (data.count>skipIn))?`${req.protocol}/${req.headers.host}/api/applications?page=${(pageIn--)>0?(pageIn--):pageIn}&limit=${limit}`:null
                 });
             } catch (error: any) {
     
-                return res.status(404).json({"message":error.message});
+                return res.status(404).json({message:error.message});
             }
         }
         return res.status(401).json({message:"UnAuthorize"});
     }
     
     public async findOne(req: any, res: Response){
-        if(req.user){
+        if(req.user && (req.user.role=='admin' || req.user._id==req.params.id)){
             const id:String=req.user._id;
             try {
                 const user:User=await new UserService().findOne(req.params.id);
-                user.Profile=new UploadFile().getProfileUrl(req as Request,user.Profile as string);
+                user.Profile=`${req.protocol}//${req.headers.host}/profile/${user.ProfileId}`;
                 return res.status(200).json({user});
     
             } catch (error: any) {
-                return res.status(404).json({"message":error.message});
+                return res.status(404).json({message:error.message});
             }
         }
         return res.status(401)
@@ -57,38 +52,45 @@ export default class UserController{
     public async create(req: Request, res: Response){
         if(req.body.Username){
             try {
-                req.body.Profile= req.file?(await new UploadFile().getPath(req.file)):null;
+                try {
+                    const id=await new UploadFile().createFile(req.file);
+                    req.body.ProfileId=id;
+                } catch (error:any) {
+                    return res.status(404).json({message:error.message});
+                }
                 return res.status(201).json(await new UserService().create(req.body));
     
             } catch (error: any) {
-                return res.status(404).json({"message":error.message});
+                return res.status(404).json({message:error.message});
             }
         }
         else
-            return res.status(404).json({"message":"NotFound"});
+            return res.status(404).json({message:"NotFound"});
     }
     
-    public async update(req: Request, res: Response){
+    public async update(req: any, res: Response){
     
-        if(req.body && req.params){
+        if(req.body && req.params && (req.params.id==req.user._id || req.user.role=='admin')){
             if (!isValidObjectId(req.params.id)) {
                 res.status(502).json({message:'id must be ObjectId'});
                 return;
             }
             try {
-                req.body.Profile= req.file? await new UploadFile().getPath(req.file):req.body.Profile;
+                const id=await new UploadFile().update(req.body.ProfileId,req.file);
+                req.body.ProfileId=id;
+                req.body.Profile=null;
                 return res.status(201).json(await new UserService().update(req.params.id, req.body));
             } catch (error: any) {
-                return res.status(404).json({"message":error.message});
+                return res.status(404).json({message:error.message});
             }
         }
         else
-            return res.status(404).json({"message":"NotFound"});
+            return res.status(404).json({message:"NotFound or you aren't authorize to execute this request"});
     }
     
-    public async remove(req: Request, res: Response){
+    public async remove(req: any, res: Response){
     
-        if (req.params){
+        if (req.params && req.params.id==req.user._id){
             if (!isValidObjectId(req.params.id)) {
                 res.status(502).json({message:'id must be ObjectId'});
                 return;
@@ -96,11 +98,11 @@ export default class UserController{
             try {
                 return res.status(204).json(await new UserService().remove(req.params.id));
             } catch (error: any) {
-                return res.status(404).json({"message":error.message});
+                return res.status(404).json({message:error.message});
             }
         }
         else
-            return res.status(404).json({"message":"NotFound"});
+            return res.status(404).json({message:"NotFound or you aren't authorize to execute this request"});
     }
     
     public async login(req: Request, res: Response){
@@ -109,21 +111,19 @@ export default class UserController{
             if (data) {
                 try {
                     return res.status(201).json(data);
-    
                 } catch (error:any) {
-                    return res.status(404).json({"message":error.message});
-    
+                    return res.status(404).json({message:error.message});
                 }
             }
             try {
-                return res.status(401).json({ "message": 'Unauthorize' });
+                return res.status(401).json({ message: 'Unauthorize' });
             } catch (error:any) {
-                return res.status(404).json({"message":error.message});
+                return res.status(404).json({message:error.message});
     
             }
         }
         else
-            return res.status(404).json({"message":"NotFound"});
+            return res.status(404).json({message:"NotFound"});
     }
     
     public async refresh_token(req:Request,res:Response){
@@ -132,10 +132,10 @@ export default class UserController{
                 return res.status(201).json(new UserService().refresh_token(req));
     
             } catch (error:any) {
-                return res.status(404).json({"message":error.message});
+                return res.status(404).json({message:error.message});
     
             }
         }
-        return res.status(401).json({ "message": 'Unauthorize' });
+        return res.status(401).json({ message: 'Unauthorize' });
     }
 }

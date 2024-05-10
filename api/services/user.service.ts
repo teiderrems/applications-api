@@ -7,17 +7,10 @@ import { Request } from "express";
 
 
 import dotenv from "dotenv";
+
 import UploadFile from "./uploadFile.service";
 
 dotenv.config();
-
-interface Client{
-    _id:String
-    Username:String;
-    Email:String
-    Firstname:String
-    Password:String
-};
 
 
 export default class UserService {
@@ -73,9 +66,6 @@ export default class UserService {
         client.UpdatedAt=Date.now();
         try {
             const user=await UserModel.findById(id);
-            if (user!.Profile!=client.Profile) {
-                new UploadFile().removeProfile(user!.Profile as string);
-            }
             return await UserModel.updateOne({_id:client._id},client);
         } catch (error:any) {
             return error.message;
@@ -85,8 +75,12 @@ export default class UserService {
      public async remove(id:any){
         try {
             const user=await UserModel.findById(id);
-            new UploadFile().removeProfile(user!.Profile as string);
-            return await UserModel.deleteOne({_id:id});
+            try {
+                const res= await new UploadFile().deleteFile(user?.ProfileId as string);
+                return await UserModel.deleteOne({_id:id});
+            } catch (error:any) {
+                return error.message;
+            }
         } catch (error:any) {
             return error.message;
         }
@@ -104,18 +98,18 @@ export default class UserService {
         const credentiel=req.body;
         if(credentiel!=null){
             const user:User=await (this.getClient(credentiel.Username));
+            user.Profile=`${req.protocol}//${req.headers.host}/profile/${user.ProfileId}`;
             if (user) {
                 const hashpw=user.Password;
                 const islog=bcrypt.compareSync(credentiel.Password,(hashpw as string));
                 if (islog) {
-                    
-                    const token= jwt.sign({_id:user._id,profile:(new UploadFile().getProfileUrl(req as Request,user.Profile as string)),role:user.Role,username:user.Username,firstname:user?.Firstname,email:user?.Email},process.env.SECRET_KEY!,{
+                    const token= jwt.sign({_id:user._id,profileId:user.ProfileId,profile:user.Profile,role:user.Role,username:user.Username,firstname:user?.Firstname,email:user?.Email},process.env.SECRET_KEY!,{
                         algorithm:"HS256",
                         expiresIn:"10m"
                     });
-                    const refresh=jwt.sign({_id:user._id,profile:(new UploadFile().getProfileUrl(req as Request,user.Profile as string)),role:user.Role,username:user.Username,firstname:user?.Firstname,email:user?.Email},process.env.SECRET_KEY!,{
+                    const refresh=jwt.sign({_id:user._id,profileId:user.ProfileId,profile:user.Profile,role:user.Role,username:user.Username,firstname:user?.Firstname,email:user?.Email},process.env.SECRET_KEY!,{
                         algorithm:"HS256",
-                        expiresIn:"1d"
+                        expiresIn:'1h'
                     });
                     return {
                         token,
@@ -133,7 +127,8 @@ export default class UserService {
         const refresh_t=req.body.refresh;
         console.log(refresh_t);
         const user = JSON.parse(atob(refresh_t.split('.')[1]));
-        const token= jwt.sign({_id:user._id,role:user.role,username:user.username,profile:(new UploadFile().getProfileUrl(req as Request,user.Profile)),firstname:user?.firstname,email:user?.email},process.env.SECRET_KEY!,{
+        
+        const token= jwt.sign({_id:user._id,role:user.role,username:user.username,profile:user.profile,firstname:user?.firstname,email:user?.email},process.env.SECRET_KEY!,{
             algorithm:"HS256",
             expiresIn:"10m"
         });

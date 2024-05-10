@@ -8,6 +8,10 @@ import bodyParser from "body-parser";
 import mongoose from "mongoose";
 import helmet from 'helmet';
 import path from "path";
+import dotenv from 'dotenv';
+import UploadFile from "./services/uploadFile.service";
+
+dotenv.config();
 
 mongoose.Promise = global.Promise
 const app:Express=express();
@@ -32,11 +36,16 @@ app.use((error: any,req:Request,res:Response,next:NextFunction)=>{
 });
 app.use(helmet());
 
+
 app.use("/api/applications",applicationRouter);
 app.use("/api/users",userRouter);
-app.use('/:profile/:filename',(req:Request,res:Response)=>{
-    const filePath=path.resolve('.','public',req.params.profile,req.params.filename);
-    return res.status(200).sendFile(filePath);
+app.use('/profile/:profileId',async(req:Request,res:Response)=>{
+    const response:File=await new UploadFile().getFile(req.params.profileId);
+    const data=Buffer.from(await response.arrayBuffer()).toString('base64');
+    res.setHeader('Content-Type', response.type);
+    res.setHeader('Content-Encoding','base64');
+    res.setHeader('Accept-Encoding','base64');
+    return res.status(200).send(data);
 })
 
 app.use('/',(req:Request,res:Response)=>{

@@ -1,33 +1,101 @@
-import { writeFile } from "fs/promises";
+
 import path from "path";
-import { v4 } from 'uuid';
-import { Request } from 'express';
-import { rm,existsSync } from "fs";
+
+import { google } from 'googleapis';
+
 
 export default class UploadFile{
-    public async getPath(file:Express.Multer.File|undefined):Promise<string>{
-        const endPath=`profiles/${v4()+'_'+file?.originalname}`;
-        const filePath=path.resolve('.','public',endPath);
-        await writeFile(filePath,Buffer.from(file?.buffer!));
-        return endPath;
+
+    public async deleteFile(id:string){
+      try {
+        const auth = new google.auth.GoogleAuth({
+        keyFile: path.join('.','modern-mystery-418021-7007c22d9a73_cle_google.json'),
+        scopes: [process.env.AUTH_URL!]
+        });
+        const res=await fetch(`${process.env.GET_URL}${id}`,{
+          method:'DELETE',
+          headers:{
+            'Authorization':'Bearer '+await auth.getAccessToken()
+          }
+        });
+        return res.ok;
+      }
+      catch (error:any){
+        return error.message;
+      }
     }
 
+    public async update(id:string,file?:Express.Multer.File){
+      try {
+        const auth = new google.auth.GoogleAuth({
+        keyFile: path.join('.','modern-mystery-418021-7007c22d9a73_cle_google.json'),
+        scopes: [process.env.AUTH_URL!]
+        });
+        const d=new Blob([Buffer.from(file?.buffer!)]);
+        
+        const content=new File([d],file?.originalname!,{type:file?.mimetype});
 
-    public getProfileUrl(req:Request,profileUrl:string):string{
-        return `${req.protocol}://${req.headers.host}/${profileUrl}`;
+        const res=await fetch(`${process.env.UPLOAD_URL!}/${id}?uploadType=media`,{
+            method:'PATCH',
+            body:content,
+            headers:{
+                'Content-Type':file?.mimetype!,
+                'Content-Length':`${file?.size!}`,
+                'Authorization':'Bearer '+await auth.getAccessToken()
+            }
+        });
+        return (await res.json() as any).id;
+      } catch (error:any) {
+          return error.message;
+      }
     }
 
-    public removeProfile(profileUrl:string):boolean{
-        const filePath=path.resolve('.','public',profileUrl);
-        if (existsSync(filePath)) { 
-            rm(filePath,(err)=>{
-                if (err) {
-                    console.log(err);
-                    return false
-                }
-                return true;
-            });
+    public async createFile(file?:Express.Multer.File){
+      try {
+          const auth = new google.auth.GoogleAuth({
+          keyFile: path.join('.','modern-mystery-418021-7007c22d9a73_cle_google.json'),
+          scopes: [process.env.AUTH_URL!]
+          });
+          const d=new Blob([Buffer.from(file?.buffer!)]);
+          
+          const content=new File([d],file?.originalname!,{type:file?.mimetype});
+  
+          const res=await fetch(`${process.env.UPLOAD_URL!}uploadType=media`,{
+              method:'POST',
+              body:content,
+              headers:{
+                  'Content-Type':file?.mimetype!,
+                  'Content-Length':`${file?.size!}`,
+                  'Authorization':'Bearer '+await auth.getAccessToken()
+              }
+          });
+          return (await res.json() as any).id;
+      } catch (error:any) {
+          return error.message;
+      }
+  }
+  
+  public getUrlImg(id:string):string{
+      return `${process.env.GET_URL}${id}`;
+  }
+
+  public async getFile(id:string){
+    try {
+      const auth = new google.auth.GoogleAuth({
+      keyFile: path.join('.','modern-mystery-418021-7007c22d9a73_cle_google.json'),
+      scopes: [process.env.AUTH_URL!]
+      });
+      const res=await fetch(`${process.env.GET_URL}${id}?alt=media`,{
+        method:'GET',
+        headers:{
+          'Authorization':'Bearer '+await auth.getAccessToken()
         }
-        return false
+      });
+      return (new File([await res.blob()],`profile_image.${res.headers.get('content-type')?.split('/')[1]}`,{
+        type:res.headers.get('content-type')!}));
     }
+    catch (error:any){
+      return error;
+    }
+  }
 }

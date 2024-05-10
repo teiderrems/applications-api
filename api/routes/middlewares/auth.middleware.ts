@@ -1,7 +1,7 @@
-import { NextFunction,Request,Response } from "express";
+import { NextFunction,Response } from "express";
 import * as jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import UploadFile from "../../services/uploadFile.service";
+
 
 dotenv.config();
 
@@ -15,7 +15,7 @@ const Authorize=(req:any,res:Response,next:NextFunction)=>{
                 res.status(401).json({"message":error.message});
                 return;
             }
-            decode={...decode,_id:decoded._id,profile:(new UploadFile().getProfileUrl(req as Request,decoded.profile)),role:decoded.role,username:decoded.username,email:decoded?.email,firstname:decoded?.firstname};
+            decode={...decode,_id:decoded._id,profile:decoded.profile,role:decoded.role,username:decoded.username,email:decoded?.email,firstname:decoded?.firstname};
         });
     }
     else{

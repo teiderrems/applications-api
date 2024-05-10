@@ -1,3 +1,4 @@
+import { profile } from "console";
 import { Schema, model } from "mongoose";
 
 enum StatusRole{
@@ -15,6 +16,7 @@ export interface User{
     Role?:string;
     Password?:string;
     Profile?:string;
+    ProfileId?:string
     CreatedAt?:Date;
     UpdatedAt?:Date;
 }
@@ -36,15 +38,13 @@ export interface Application{
 
 const UserSchema:Schema=new Schema({
     Username:{
-        type:String,
-        unique:true
+        type:String
     },
     Firstname:{
         type:String
     },
     Email:{
-        type:String,
-        unique:true
+        type:String
     },
     Lastname:{
         type:String
@@ -59,7 +59,8 @@ const UserSchema:Schema=new Schema({
     },
     Profile:{
         type:String
-    }
+    },
+    ProfileId:String
 },
 {
     versionKey:false,
