@@ -125,15 +125,11 @@ export default class UserService {
     
     public async refresh_token(req:Request){
         const refresh_t=req.body.refresh;
-        console.log(refresh_t);
         const user = JSON.parse(atob(refresh_t.split('.')[1]));
-        
         const token= jwt.sign({_id:user._id,role:user.role,username:user.username,profile:user.profile,firstname:user?.firstname,email:user?.email},process.env.SECRET_KEY!,{
             algorithm:"HS256",
             expiresIn:"10m"
         });
-        return {
-            token
-        };
+        return token;
     }
 }

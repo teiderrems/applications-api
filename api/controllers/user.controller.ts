@@ -129,11 +129,9 @@ export default class UserController{
     public async refresh_token(req:Request,res:Response){
         if (req.body) {
             try {
-                return res.status(201).json(new UserService().refresh_token(req));
-    
+                return res.status(201).json({token:await new UserService().refresh_token(req)});
             } catch (error:any) {
                 return res.status(404).json({message:error.message});
-    
             }
         }
         return res.status(401).json({ message: 'Unauthorize' });
