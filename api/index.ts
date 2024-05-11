@@ -24,7 +24,7 @@ main().then(res=>console.log("connexion réussit")).catch(err=>console.log(err.m
 app.use(express.static(path.join('.', 'public')))
 
 app.use(cors({
-    origin:["https://applications-custom.vercel.app","http://localhost:3000",]
+    origin:["https://applications-teiderrems-teiderrems-projects.vercel.app","https://applications-custom.vercel.app","http://localhost:3000",]
 })); 
 app.use((error: any,req:Request,res:Response,next:NextFunction)=>{
     if(error){
