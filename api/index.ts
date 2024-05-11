@@ -40,12 +40,12 @@ app.use(helmet());
 app.use("/api/applications",applicationRouter);
 app.use("/api/users",userRouter);
 app.use('/profile/:profileId',async(req:Request,res:Response)=>{
-    const response=await new UploadFile().getFile(req.params.profileId);
-    if ((response as string).includes('data')) {
-      res.setHeader('Content-Type', (response as string).split(';')[0].split(':')[1]);
-      return res.status(200).send(response);
+    try {
+        const response=await new UploadFile().getFile(req.params.profileId);
+        return res.status(200).json(response);
+    } catch (error) { 
+        res.status(404).json(error);
     }
-    res.status(404).send(response);
 })
 
 app.use('/',(req:Request,res:Response)=>{
