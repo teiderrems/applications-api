@@ -9,7 +9,7 @@ export default class UploadFile{
     public async deleteFile(id:string){
       try {
         const auth = new google.auth.GoogleAuth({
-        keyFile: path.join('.','modern-mystery-418021-7007c22d9a73_cle_google.json'),
+        keyFile: path.join(__dirname,'modern-mystery-418021-7007c22d9a73_cle_google.json'),
         scopes: [process.env.AUTH_URL!]
         });
         const res=await fetch(`${process.env.GET_URL}${id}`,{
@@ -28,7 +28,7 @@ export default class UploadFile{
     public async update(id:string,file?:Express.Multer.File){
       try {
         const auth = new google.auth.GoogleAuth({
-        keyFile: path.join('.','modern-mystery-418021-7007c22d9a73_cle_google.json'),
+        keyFile: path.join(__dirname,'modern-mystery-418021-7007c22d9a73_cle_google.json'),
         scopes: [process.env.AUTH_URL!]
         });
         const d=new Blob([Buffer.from(file?.buffer!)]);
@@ -53,7 +53,7 @@ export default class UploadFile{
     public async createFile(file?:Express.Multer.File){
       try {
           const auth = new google.auth.GoogleAuth({
-          keyFile: path.join('.','modern-mystery-418021-7007c22d9a73_cle_google.json'),
+          keyFile: path.join(__dirname,'modern-mystery-418021-7007c22d9a73_cle_google.json'),
           scopes: [process.env.AUTH_URL!]
           });
           const d=new Blob([Buffer.from(file?.buffer!)]);
@@ -82,7 +82,7 @@ export default class UploadFile{
   public async getFile(id:string){
     try {
       const auth = new google.auth.GoogleAuth({
-      keyFile: path.join('.','modern-mystery-418021-7007c22d9a73_cle_google.json'),
+      keyFile: path.join(__dirname,'modern-mystery-418021-7007c22d9a73_cle_google.json'),
       scopes: [process.env.AUTH_URL!]
       });
       const res=await fetch(`${process.env.GET_URL}${id}?alt=media`,{
