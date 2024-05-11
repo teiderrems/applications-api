@@ -8,7 +8,6 @@ import { Request } from "express";
 
 import dotenv from "dotenv";
 
-import UploadFile from "./uploadFile.service";
 
 dotenv.config();
 
@@ -76,7 +75,6 @@ export default class UserService {
         try {
             const user=await UserModel.findById(id);
             try {
-                const res= await new UploadFile().deleteFile(user?.ProfileId as string);
                 return await UserModel.deleteOne({_id:id});
             } catch (error:any) {
                 return error.message;
@@ -99,15 +97,14 @@ export default class UserService {
         if(credentiel!=null){
             const user:User=await (this.getClient(credentiel.Username));
             if (user) {
-                user.Profile=`${req.protocol}://${req.headers.host}/profile/${user.ProfileId}`;
                 const hashpw=user.Password;
                 const islog=bcrypt.compareSync(credentiel.Password,(hashpw as string));
                 if (islog) {
-                    const token= jwt.sign({_id:user._id,profileId:user.ProfileId,profile:user.Profile,role:user.Role,username:user.Username,firstname:user?.Firstname,email:user?.Email},process.env.SECRET_KEY!,{
+                    const token= jwt.sign({_id:user._id,profile:user.Profile,role:user.Role,username:user.Username,firstname:user?.Firstname,email:user?.Email},process.env.SECRET_KEY!,{
                         algorithm:"HS256",
                         expiresIn:"10m"
                     });
-                    const refresh=jwt.sign({_id:user._id,profileId:user.ProfileId,profile:user.Profile,role:user.Role,username:user.Username,firstname:user?.Firstname,email:user?.Email},process.env.SECRET_KEY!,{
+                    const refresh=jwt.sign({_id:user._id,profile:user.Profile,role:user.Role,username:user.Username,firstname:user?.Firstname,email:user?.Email},process.env.SECRET_KEY!,{
                         algorithm:"HS256",
                         expiresIn:'1h'
                     });

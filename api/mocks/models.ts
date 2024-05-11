@@ -15,7 +15,7 @@ export interface User{
     Lastname?:string;
     Role?:string;
     Password?:string;
-    Profile?:string;
+    Profile?:any;
     ProfileId?:string
     CreatedAt?:Date;
     UpdatedAt?:Date;

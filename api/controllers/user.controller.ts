@@ -2,7 +2,6 @@ import { Request, Response } from "express"
 
 import UserService from "../services/user.service"
 import { isValidObjectId } from "mongoose";
-import UploadFile from "../services/uploadFile.service";
 import { User } from "../mocks/models";
 
 export default class UserController{
@@ -37,7 +36,6 @@ export default class UserController{
             const id:String=req.user._id;
             try {
                 const user:User=await new UserService().findOne(req.params.id);
-                user.Profile=`${req.protocol}://${req.headers.host}/profile/${user.ProfileId}`;
                 return res.status(200).json({user});
     
             } catch (error: any) {
@@ -52,12 +50,7 @@ export default class UserController{
     public async create(req: Request, res: Response){
         if(req.body.Username){
             try {
-                try {
-                    const id=await new UploadFile().createFile(req.file);
-                    req.body.ProfileId=id;
-                } catch (error:any) {
-                    return res.status(404).json({message:error.message});
-                }
+                
                 return res.status(201).json(await new UserService().create(req.body));
     
             } catch (error: any) {
@@ -76,9 +69,6 @@ export default class UserController{
                 return;
             }
             try {
-                const id=await new UploadFile().update(req.body.ProfileId,req.file);
-                req.body.ProfileId=id;
-                req.body.Profile=null;
                 return res.status(201).json(await new UserService().update(req.params.id, req.body));
             } catch (error: any) {
                 return res.status(404).json({message:error.message});

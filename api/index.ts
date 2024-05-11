@@ -9,7 +9,7 @@ import mongoose from "mongoose";
 import helmet from 'helmet';
 import path from "path";
 import dotenv from 'dotenv';
-import UploadFile from "./services/uploadFile.service";
+
 
 dotenv.config();
 
@@ -24,7 +24,7 @@ main().then(res=>console.log("connexion réussit")).catch(err=>console.log(err.m
 app.use(express.static(path.join('.', 'public')))
 
 app.use(cors({
-    origin:["https://applications-custom.vercel.app","http://localhost:3000"]
+    origin:["https://applications-custom.vercel.app","http://localhost:3000",]
 })); 
 app.use((error: any,req:Request,res:Response,next:NextFunction)=>{
     if(error){
@@ -39,14 +39,6 @@ app.use(helmet());
 
 app.use("/api/applications",applicationRouter);
 app.use("/api/users",userRouter);
-app.use('/profile/:profileId',async(req:Request,res:Response)=>{
-    try {
-        const response=await new UploadFile().getFile(req.params.profileId);
-        return res.status(200).json(response);
-    } catch (error) { 
-        res.status(404).json(error);
-    }
-})
 
 app.use('/',(req:Request,res:Response)=>{
     res.status(200).send("<h1><i> Welcome</i></h1>");
