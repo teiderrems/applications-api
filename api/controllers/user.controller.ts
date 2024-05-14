@@ -48,8 +48,8 @@ export default class UserController{
     }
     
     
-    public async create(req: Request, res: Response){
-        if(req.body.Username){
+    public async create(req: any, res: Response){
+        if(req.body){
             try {
                 const res=await new UploadFile().createFile(req.file);
                 if (res) {
