@@ -91,12 +91,10 @@ export default class UploadFile{
           'Authorization':'Bearer '+await auth.getAccessToken()
         }
       });
-      // const file=new File([Buffer.from(await(await res.blob()).arrayBuffer())],`profile.${res.headers.get('content-type')?.split('/')[1]}`);
-      // const imgb64=(Buffer.from(await file.arrayBuffer())).toString('base64');
-      return await res.blob();         /*JSON.stringify({
-                  image:imgb64,
-                  type:res.headers.get('content-type')
-                });*/  //`data:${res.headers.get('content-type')};base64,${imgb64}`;
+      return {
+        image:Buffer.from(await(await res.blob()).arrayBuffer()),
+        minetype:res.headers.get('content-type')
+      } 
     }
     catch (error:any){
       return error.message;
