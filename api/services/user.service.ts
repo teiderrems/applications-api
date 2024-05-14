@@ -47,7 +47,7 @@ export default class UserService {
             from: process.env.EMAIL??'teidaremi0@gmail.com',
             subject: 'Register',
             text: 'Welcome',
-            html: `<strong>Your account is added successfully. <a href=${client.Email}> Welcome ${client.Username}</a> Thank you for choosing us for a good history of your applications</strong>`,
+            html: `<strong>Your account is added successfully. <a href='http://localhost:3000/login'> Confirm your email address</a> Thank you for choosing us for a good history of your applications</strong>`,
             }
             try {
                 const res= await sgMail.send(msg);
@@ -100,11 +100,11 @@ export default class UserService {
                 const hashpw=user.Password;
                 const islog=bcrypt.compareSync(credentiel.Password,(hashpw as string));
                 if (islog) {
-                    const token= jwt.sign({_id:user._id,profile:user.Profile,role:user.Role,username:user.Username,firstname:user?.Firstname,email:user?.Email},process.env.SECRET_KEY!,{
+                    const token= jwt.sign({_id:user._id,profile:user.Profile,profileId:user.ProfileId,role:user.Role,username:user.Username,firstname:user?.Firstname,email:user?.Email},process.env.SECRET_KEY!,{
                         algorithm:"HS256",
                         expiresIn:"10m"
                     });
-                    const refresh=jwt.sign({_id:user._id,profile:user.Profile,role:user.Role,username:user.Username,firstname:user?.Firstname,email:user?.Email},process.env.SECRET_KEY!,{
+                    const refresh=jwt.sign({_id:user._id,profile:user.Profile,profileId:user.ProfileId,role:user.Role,username:user.Username,firstname:user?.Firstname,email:user?.Email},process.env.SECRET_KEY!,{
                         algorithm:"HS256",
                         expiresIn:'1h'
                     });
@@ -123,7 +123,7 @@ export default class UserService {
     public async refresh_token(req:Request){
         const refresh_t=req.body.refresh;
         const user = JSON.parse(atob(refresh_t.split('.')[1]));
-        const token= jwt.sign({_id:user._id,role:user.role,username:user.username,profile:user.profile,firstname:user?.firstname,email:user?.email},process.env.SECRET_KEY!,{
+        const token= jwt.sign({_id:user._id,role:user.role,profileId:user.ProfileId,username:user.username,profile:user.profile,firstname:user?.firstname,email:user?.email},process.env.SECRET_KEY!,{
             algorithm:"HS256",
             expiresIn:"10m"
         });

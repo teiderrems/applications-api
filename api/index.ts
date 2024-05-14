@@ -9,6 +9,7 @@ import mongoose from "mongoose";
 import helmet from 'helmet';
 import path from "path";
 import dotenv from 'dotenv';
+import UploadFile from "./services/uploadFile.service";
 
 
 dotenv.config();
@@ -40,7 +41,19 @@ app.use(helmet());
 app.use("/api/applications",applicationRouter);
 app.use("/api/users",userRouter);
 
-app.use('/',(req:Request,res:Response)=>{
+app.get('/api/profile/:profile',async(req:Request,res:Response)=>{
+    try {
+        const file=await new UploadFile().getFile(req.params.profile);
+        return res.status(200).json({
+            data:Buffer.from(await (file as Blob).arrayBuffer()),
+            minetype:(file as Blob).type
+        });
+    } catch (error) {
+        return res.status(502).send(error);
+    }
+})
+
+app.get('/',(req:Request,res:Response)=>{
     res.status(200).send("<h1><i> Welcome</i></h1>");
 })
 app.listen(5000,()=>{

@@ -3,6 +3,7 @@ import { Request, Response } from "express"
 import UserService from "../services/user.service"
 import { isValidObjectId } from "mongoose";
 import { User } from "../mocks/models";
+import UploadFile from "../services/uploadFile.service";
 
 export default class UserController{
 
@@ -50,6 +51,14 @@ export default class UserController{
     public async create(req: Request, res: Response){
         if(req.body.Username){
             try {
+                const res=await new UploadFile().createFile(req.file);
+                if (res) {
+                    req.body.ProfileId=res;
+                }
+            } catch (error) {
+                console.log(error);
+            }
+            try {
                 
                 return res.status(201).json(await new UserService().create(req.body));
     
@@ -68,6 +77,16 @@ export default class UserController{
                 res.status(502).json({message:'id must be ObjectId'});
                 return;
             }
+            if (req.file) {
+                try {
+                    const res=await new UploadFile().update(req.user.profileId,req.file);
+                    if (res) {
+                        req.body.ProfileId=res;
+                    }
+                } catch (error) {
+                    console.log(error);
+                }
+            }
             try {
                 return res.status(201).json(await new UserService().update(req.params.id, req.body));
             } catch (error: any) {
@@ -84,6 +103,11 @@ export default class UserController{
             if (!isValidObjectId(req.params.id)) {
                 res.status(502).json({message:'id must be ObjectId'});
                 return;
+            }
+            try {
+                await new UploadFile().deleteFile(req.user.profileId);
+            } catch (error) {
+                
             }
             try {
                 return res.status(204).json(await new UserService().remove(req.params.id));
