@@ -10,13 +10,13 @@ export default class UserController{
     public async findAll(req: any, res: Response){
         if ((req.user) && req.user.role=='admin'){
             try {
-                const {page,limit}=req.query;
+                const {page,limit,role}=req.query;
                 let pageIn=parseInt(page)?parseInt(page):0;
                 let skipIn=parseInt(limit)?parseInt(limit):10;
                 const data:{
                     users:User[],
                     count:number
-                }=await new UserService().findAll(pageIn,skipIn,req.params.role??'all');
+                }=await new UserService().findAll(pageIn,skipIn,role);
                 const val=pageIn*(skipIn);
 
                 return res.status(200).json({
@@ -155,7 +155,7 @@ export default class UserController{
     }
 
     public verif_email(req:Request,res:Response){
-        if (req.params.email) {
+        if (req.query.email) {
             return res.redirect('https://applications-custom.vercel.app/login');
         }
         return res.status(404).send('email address is required');

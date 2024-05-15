@@ -5,6 +5,7 @@ export default class ApplicationService{
     public async findAll(user:String,page:number,skip:number,status='all'){
         try {
             let offset:number=page*skip;
+            
             let data=status=='all'?await ApplicationModel.find({Owner:user}).limit(skip).skip(offset):await ApplicationModel.find({Owner:user,Status:status}).limit(skip).skip(offset);
             return {
                 applications:data,

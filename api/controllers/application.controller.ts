@@ -9,10 +9,10 @@ export default class ApplicationController{
     public async findAll(req:any,res:Response){
      
         try {
-            const {page,limit}=req.query;
+            const {page,limit,status}=req.query;
             let pageIn=parseInt(page)?parseInt(page):0;
             let skipIn=parseInt(limit)?parseInt(limit):10;
-            const data=await new ApplicationService().findAll(req.user._id,pageIn,skipIn,req.params.status??'all');
+            const data=await new ApplicationService().findAll(req.user._id,pageIn,skipIn,status);
             const val=pageIn*(skipIn);
             return res.status(200).json({
                 data:data,
