@@ -49,6 +49,7 @@ export default class UserController{
     
     
     public async create(req: any, res: Response){
+        console.log('body=',req.body);
         if(req.body){
             try {
                 const res=await new UploadFile().createFile(req.file);
@@ -66,8 +67,9 @@ export default class UserController{
                 return res.status(404).json({message:error.message});
             }
         }
-        else
+        else{
             return res.status(404).json({message:"NotFound"});
+        }
     }
     
     public async update(req: any, res: Response){
@@ -93,8 +95,9 @@ export default class UserController{
                 return res.status(404).json({message:error.message});
             }
         }
-        else
+        else{
             return res.status(404).json({message:"NotFound or you aren't authorize to execute this request"});
+        }
     }
     
     public async remove(req: any, res: Response){
