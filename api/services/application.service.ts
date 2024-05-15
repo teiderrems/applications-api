@@ -2,10 +2,10 @@ import { ApplicationModel } from "../mocks/models";
 
 export default class ApplicationService{
 
-    public async findAll(user:String,page:number,skip:number){
+    public async findAll(user:String,page:number,skip:number,status='all'){
         try {
             let offset:number=page*skip;
-            let data=await ApplicationModel.find({Owner:user}).limit(skip).skip(offset);
+            let data=status=='all'?await ApplicationModel.find({Owner:user}).limit(skip).skip(offset):await ApplicationModel.find({Owner:user,Status:status}).limit(skip).skip(offset);
             return {
                 applications:data,
                 count:(await ApplicationModel.find({Owner:user})).length

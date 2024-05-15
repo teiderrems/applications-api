@@ -13,10 +13,10 @@ dotenv.config();
 
 
 export default class UserService {
-    public async findAll(page:number,skip:number){
+    public async findAll(page:number,skip:number,role='all'){
         try {
             let offset:number=page*skip;
-            let data=await UserModel.find({}).limit(skip).skip(offset);
+            let data=role=='all'?await UserModel.find({}).limit(skip).skip(offset):await UserModel.find({Role:role}).limit(skip).skip(offset);
             return {
                 users:data,
                 count:(await UserModel.find({})).length
@@ -47,7 +47,7 @@ export default class UserService {
             from: process.env.EMAIL??'teidaremi0@gmail.com',
             subject: 'Register',
             text: 'Welcome',
-            html: `<strong>Your account is added successfully. <a href='https://applications-custom.vercel.app/login'> Confirm your email address</a> Thank you for choosing us for a good history of your applications</strong>`,
+            html: `<strong>Your account is added successfully. <a href=https://applications-backend.vercel.app/api/users/verif_email?email=${client.Email}> Confirm your email address</a> Thank you for choosing us for a good history of your applications</strong>`,
             }
             try {
                 const res= await sgMail.send(msg);

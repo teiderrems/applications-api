@@ -16,7 +16,7 @@ export default class UserController{
                 const data:{
                     users:User[],
                     count:number
-                }=await new UserService().findAll(pageIn,skipIn);
+                }=await new UserService().findAll(pageIn,skipIn,req.params.role??'all');
                 const val=pageIn*(skipIn);
 
                 return res.status(200).json({
@@ -152,5 +152,12 @@ export default class UserController{
             }
         }
         return res.status(401).json({ message: 'Unauthorize' });
+    }
+
+    public verif_email(req:Request,res:Response){
+        if (req.params.email) {
+            return res.redirect('https://applications-custom.vercel.app/login');
+        }
+        return res.status(404).send('email address is required');
     }
 }

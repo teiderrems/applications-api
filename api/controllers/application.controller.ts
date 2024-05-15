@@ -12,7 +12,7 @@ export default class ApplicationController{
             const {page,limit}=req.query;
             let pageIn=parseInt(page)?parseInt(page):0;
             let skipIn=parseInt(limit)?parseInt(limit):10;
-            const data=await new ApplicationService().findAll(req.user._id,pageIn,skipIn);
+            const data=await new ApplicationService().findAll(req.user._id,pageIn,skipIn,req.params.status??'all');
             const val=pageIn*(skipIn);
             return res.status(200).json({
                 data:data,
