@@ -2,6 +2,7 @@ import {Request,Response} from "express"
 
 import ApplicationService from "../services/application.service"
 import { isValidObjectId } from "mongoose";
+import { ApplicationModel } from "../mocks/models";
 
 
 export default class ApplicationController{
@@ -21,7 +22,7 @@ export default class ApplicationController{
             });
             
         } catch (error:any) {
-            res.status(404).json({"message":error.message} );
+            res.status(404).json({message:error.message} );
             return;
         }
     }
@@ -37,12 +38,12 @@ export default class ApplicationController{
                 return;
     
             } catch (error:any) {
-                res.status(404).json({"message":error.message});
+                res.status(404).json({message:error.message});
                 return;
     
             }
         }
-        return res.status(404).json({"message":"Parameter is required"});
+        return res.status(404).json({message:"Parameter is required"});
     }
     
     
@@ -54,11 +55,11 @@ export default class ApplicationController{
                 return;
     
             } catch (error:any) {
-                res.status(404).json({"message":error.message});
+                res.status(404).json({message:error.message});
                 return;
             }
         }
-        return res.status(404).json({"message":"NotFound"});
+        return res.status(404).json({message:"NotFound"});
     }
     
     public async update(req:Request,res:Response){
@@ -72,15 +73,16 @@ export default class ApplicationController{
                 return;
     
             } catch (error:any) {
-                res.status(404).json({"message":error.message});
+                res.status(404).json({message:error.message});
                 return;
             }
         }
-        return res.status(404).json({"message":"NotFound"});
+        return res.status(404).json({message:"NotFound"});
     }
     
-    public async remove(req:Request,res:Response){
-        if (req.params){
+    public async remove(req:any,res:Response){
+        const app= await ApplicationModel.findOne({User:req?.user._id,_id:req.params.id});
+        if (req.params && app){
             if (!isValidObjectId(req.params.id)) {
                 res.status(502).json({message:'id must be ObjectId'});
                 return;
@@ -89,10 +91,10 @@ export default class ApplicationController{
                 res.status(204).json(await new ApplicationService().remove(req.params.id));
                 return;
             } catch (error:any) {
-                res.status(404).json({"message":error.message});
+                res.status(404).json({message:error.message});
                 return;
             }
         }
-        return res.status(404).json({"message":"NotFound"});
+        return res.status(401).json({message:"Unauthorize"});
     }
 }

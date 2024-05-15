@@ -101,8 +101,8 @@ export default class UserController{
     }
     
     public async remove(req: any, res: Response){
-    
-        if (req.params && req.params.id==req.user._id){
+
+        if (req.params && (req.params.id==req.user._id || req.user.role=='admin')){
             if (!isValidObjectId(req.params.id)) {
                 res.status(502).json({message:'id must be ObjectId'});
                 return;
@@ -119,7 +119,7 @@ export default class UserController{
             }
         }
         else
-            return res.status(404).json({message:"NotFound or you aren't authorize to execute this request"});
+            return res.status(401).json({message:"NotFound or you aren't authorize to execute this request"});
     }
     
     public async login(req: Request, res: Response){
