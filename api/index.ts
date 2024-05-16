@@ -10,6 +10,7 @@ import helmet from 'helmet';
 import path from "path";
 import dotenv from 'dotenv';
 import UploadFile from "./services/uploadFile.service";
+import UserController from "./controllers/user.controller";
 
 
 dotenv.config();
@@ -40,6 +41,7 @@ app.use(helmet());
 
 app.use("/api/applications",applicationRouter);
 app.use("/api/users",userRouter);
+userRouter.post('/api/verif_email',new UserController().verif_email)
 
 app.get('/api/profile/:profile',async(req:Request,res:Response)=>{
     try {

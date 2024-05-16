@@ -156,7 +156,7 @@ export default class UserController{
 
     public verif_email(req:Request,res:Response){
         if (req.query.email) {
-            return res.redirect('https://applications-custom.vercel.app/login');
+            return res.status(200).redirect('https://applications-custom.vercel.app/login');
         }
         return res.status(404).send('email address is required');
     }

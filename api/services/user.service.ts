@@ -47,7 +47,7 @@ export default class UserService {
             from: process.env.EMAIL??'teidaremi0@gmail.com',
             subject: 'Register',
             text: 'Welcome',
-            html: `<strong>Your account is added successfully. <a href=https://applications-backend.vercel.app/api/users/verif_email?email=${client.Email}> Confirm your email address</a> Thank you for choosing us for a good history of your applications</strong>`,
+            html: `<strong>Your account is added successfully. <a href=https://applications-custom.vercel.app/login> Confirm your email address</a> Thank you for choosing us for a good history of your applications</strong>`,
             }
             try {
                 const res= await sgMail.send(msg);
