@@ -37,7 +37,6 @@ export default class ApplicationService{
     public async update(id:any,application:any){
         application._id=id;
         application.UpdatedAt=Date.now();
-        console.log(application);
         try {
             const res= await ApplicationModel.updateOne({_id:application._id},application);
             return res;
