@@ -12,15 +12,16 @@ const Authorize=(req:any,res:Response,next:NextFunction)=>{
     if (token){
         jwt.verify(token,process.env.SECRET_KEY!,function(error: any,decoded: any){
             if (error) {
-                res.status(401).json({"message":error.message});
-                return;
+                res.statusCode=401;
+                return res.json({message:error.message});
+                
             }
             decode=decoded;
         });
     }
     else{
-        res.status(401).send({"message":'Unauthorized'});
-        return;
+        res.statusCode=401;
+        return res.send({message:'Unauthorized'});
     }
 
     if (decode) {
@@ -29,8 +30,8 @@ const Authorize=(req:any,res:Response,next:NextFunction)=>{
         return;
     }
     else{
-        res.status(401).send({"message":'Unauthorize'});
-        return;
+        res.statusCode=401;
+        return res.send({message:'Unauthorize'});
     }
 
 }
