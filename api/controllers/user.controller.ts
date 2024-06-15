@@ -49,7 +49,6 @@ export default class UserController{
     
     
     public async create(req: any, res: Response){
-        console.log('body=',req.body);
         if(req.body){
             try {
                 const res=await new UploadFile().createFile(req.file);
