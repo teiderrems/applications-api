@@ -22,24 +22,20 @@ export default class ApplicationController{
             });
             
         } catch (error:any) {
-            res.status(404).json({message:error.message} );
-            return;
+            return res.status(404).json({message:error.message} );
         }
     }
     
     public async findOne(req:Request,res:Response){
         if (req.params){
             if (!isValidObjectId(req.params.id)) {
-                res.status(502).json({message:'id must be ObjectId'});
-                return;
+                return res.status(502).json({message:'id must be ObjectId'});
             }
             try {
-                res.status(200).json(await new ApplicationService().findOne(req.params.id));
-                return;
+                return res.status(200).json(await new ApplicationService().findOne(req.params.id));
     
             } catch (error:any) {
-                res.status(404).json({message:error.message});
-                return;
+                return res.status(404).json({message:error.message});  
     
             }
         }
@@ -81,20 +77,23 @@ export default class ApplicationController{
     }
     
     public async remove(req:any,res:Response){
-        const app= await ApplicationModel.findOne({User:req?.user._id,_id:req.params.id});
-        if (req.params && app){
-            if (!isValidObjectId(req.params.id)) {
-                res.status(502).json({message:'id must be ObjectId'});
-                return;
-            }
+        
+        const {user}=req;
+        const {id}=req.params;
+        if (!isValidObjectId(id)) {
+            return res.status(502).json({message:'id must be ObjectId'});
+        }
+        let app;
+        app= await ApplicationModel.findOne({Owner:user?._id,_id:id});
+        if (app){
             try {
-                res.status(204).json(await new ApplicationService().remove(req.params.id));
-                return;
+                return res.status(204).json(await new ApplicationService().remove(id));
+
             } catch (error:any) {
-                res.status(404).json({message:error.message});
-                return;
+                return res.status(404).json({message:error.message});
             }
         }
-        return res.status(401).json({message:"Unauthorize"});
+        else
+            return res.status(401).json({message:"Unauthorize"});
     }
 }

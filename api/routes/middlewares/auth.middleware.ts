@@ -7,29 +7,29 @@ dotenv.config();
 
 const Authorize=(req:any,res:Response,next:NextFunction)=>{
 
-    const token=req.header('authorization')?.split(" ")[1];
-    let decode:any=undefined;
-    if (token){
+    const token=req.header('authorization')?.split(" ")[1]??"";
+    let decode:any={};
+    if (!!token){
         jwt.verify(token,process.env.SECRET_KEY!,function(error: any,decoded: any){
             if (error) {
-                res.status(401).json({"message":error.message});
+                res.sendStatus(401);
+                res.json({message:error.message});
                 return;
             }
-            decode=decoded;
+            decode={...decode,_id:decoded._id,role:decoded.role};
         });
     }
     else{
-        res.status(401).send({"message":'Unauthorized'});
+        res.status(401).send({message:'Unauthorized'});
         return;
     }
 
     if (decode) {
-        req.user=decode;
-        next();
-        return;
+        req.user={...req.user,_id:decode._id,role:decode.role};
+        return next();
     }
     else{
-        res.status(401).send({"message":'Unauthorize'});
+        res.status(401).send({message:'Unauthorize'});
         return;
     }
 
