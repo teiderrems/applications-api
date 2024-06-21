@@ -17,7 +17,7 @@ export default class UserController{
                 const data:{
                     users:User[],
                     count:number
-                }=await new UserService().findAll(pageIn,skipIn,role);
+                }=await new UserService().findAll(pageIn,skipIn,user.role==='instructor'?'student':role);
                 const val=pageIn*(skipIn);
 
                 return res.status(200).json({
