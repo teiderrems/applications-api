@@ -1,4 +1,4 @@
-import { User, UserModel } from "../mocks/models";
+import { ApplicationModel, User, UserModel } from "../mocks/models";
 import bcrypt from "bcrypt"
 
 import * as jwt from "jsonwebtoken"
@@ -7,6 +7,8 @@ import { Request } from "express";
 
 
 import dotenv from "dotenv";
+import { count } from "console";
+import ApplicationService from "./application.service";
 
 
 dotenv.config();
@@ -64,7 +66,6 @@ export default class UserService {
         client._id=id;
         client.UpdatedAt=Date.now();
         try {
-            const user=await UserModel.findById(id);
             return await UserModel.updateOne({_id:client._id},client);
         } catch (error:any) {
             return error.message;
@@ -129,4 +130,9 @@ export default class UserService {
         });
         return token;
     }
+
+    public async findAllUserAndApplication(page:number,skip:number,user:string){
+        return await new ApplicationService().findAll(user,page,skip);
+    }
+
 }

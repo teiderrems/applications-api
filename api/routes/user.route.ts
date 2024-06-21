@@ -9,6 +9,7 @@ const userRouter=Router();
 
 
 userRouter.get("/",Authorize,new UserController().findAll);
+userRouter.get("/applications",Authorize,new UserController().findAllUserAndApplication);
 userRouter.get("/:id",Authorize,new UserController().findOne);
 userRouter.post("/",multer().single('profile'),new UserController().create);
 userRouter.put("/:id",multer().single('profile'),Authorize,new UserController().update);

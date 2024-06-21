@@ -8,7 +8,8 @@ import UploadFile from "../services/uploadFile.service";
 export default class UserController{
 
     public async findAll(req: any, res: Response){
-        if ((req.user) && req.user.role=='admin'){
+        const { user }=req;
+        if (user && (user.role==='instructor' || user.role==='admin')){
             try {
                 const {page,limit,role}=req.query;
                 let pageIn=parseInt(page)?parseInt(page):0;
@@ -21,13 +22,31 @@ export default class UserController{
 
                 return res.status(200).json({
                     data:data,
-                    next:((data.count) && (data.count>skipIn))?`${req.protocol}//${req.headers.host}/api/applications?page=${(val<data.count)?(pageIn++):pageIn}&limit=${limit}`:null,
+                    next:((data.count) && (data.count>skipIn))?`${req.protocol}/${req.headers.host}/api/applications?page=${(val<data.count)?(pageIn++):pageIn}&limit=${limit}`:null,
                     prev:((data.count) && (data.count>skipIn))?`${req.protocol}/${req.headers.host}/api/applications?page=${(pageIn--)>0?(pageIn--):pageIn}&limit=${limit}`:null
                 });
             } catch (error: any) {
     
                 return res.status(404).json({message:error.message});
             }
+        }
+        return res.status(401).json({message:"UnAuthorize"});
+    }
+
+
+    public async findAllUserAndApplication(req: any, res: Response) {
+        const {user}=req;
+        if (user && (user.role==='instructor' || user.role==='admin')) {
+            const {page,limit,owner}=req.query;
+            let pageIn=parseInt(page)?parseInt(page):0;
+            let skipIn=parseInt(limit)?parseInt(limit):10;
+            const data:any=await new UserService().findAllUserAndApplication(pageIn,skipIn,owner);
+            const val=pageIn*(skipIn);
+            return res.status(200).json({
+                data:data,
+                next:((data.count) && (data.count>skipIn))?`${req.protocol}//${req.headers.host}/api/applications?page=${(val<data.count)?(pageIn++):pageIn}&limit=${limit}`:null,
+                prev:((data.count) && (data.count>skipIn))?`${req.protocol}//${req.headers.host}/api/applications?page=${(pageIn--)>0?(pageIn--):pageIn}&limit=${limit}`:null
+            });
         }
         return res.status(401).json({message:"UnAuthorize"});
     }
