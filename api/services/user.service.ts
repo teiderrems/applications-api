@@ -1,4 +1,4 @@
-import { ApplicationModel, User, UserModel } from "../mocks/models";
+import { User, UserModel } from "../mocks/models";
 import bcrypt from "bcrypt"
 
 import * as jwt from "jsonwebtoken"
@@ -7,7 +7,6 @@ import { Request } from "express";
 
 
 import dotenv from "dotenv";
-import { count } from "console";
 import ApplicationService from "./application.service";
 
 
@@ -49,7 +48,7 @@ export default class UserService {
             from: process.env.EMAIL??'teidaremi0@gmail.com',
             subject: 'Register',
             text: 'Welcome',
-            html: `<strong>Your account is added successfully. <a href=https://applications-custom.vercel.app/login> Confirm your email address</a> Thank you for choosing us for a good history of your applications</strong>`,
+            html: `<strong>Your account is added successfully. <a href=http://localhost:3000/login> Confirm your email address</a> Thank you for choosing us for a good history of your applications</strong>`,
             }
             try {
                 const res= await sgMail.send(msg);
@@ -136,18 +135,18 @@ export default class UserService {
     }
 
     public async resetPassword(email:string,password:string){
-        try {
+        try { //https://applications-custom.vercel.app
             const salt=bcrypt.genSaltSync(10);
             const result=await UserModel.updateOne({Email:email},{Password:bcrypt.hashSync(password,salt)});
-            sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
-            const msg = {
-                to: email,
-                from: process.env.EMAIL??'teidaremi0@gmail.com',
-                subject: 'Update Password',
-                text: 'Greeting',
-                html: `<strong> <a href=https://applications-custom.vercel.app/login>Your password account has been updated successfully.Click here for continue </a> </strong>`,
-            }
-            const res= await sgMail.send(msg);
+            // sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
+            // const msg = {
+            //     to: email,
+            //     from: process.env.EMAIL??'teidaremi0@gmail.com',
+            //     subject: 'Update Password',
+            //     text: 'Greeting',
+            //     html: `<strong> <a href=https://applications-custom.vercel.app/login>Your password account has been updated successfully.Click here for continue </a> </strong>`,
+            // }
+            // const res= await sgMail.send(msg);
             return result;
         }
         catch (e:any) {
