@@ -162,7 +162,7 @@ export default class UserService {
                 from: process.env.EMAIL??'teidaremi0@gmail.com',
                 subject: 'Reset Password',
                 text: 'Welcome',
-                html: `<strong><a href=https://applications-custom.vercel.app/reset-password> Please click. Here  for reset your password</a></strong>`,
+                html: `<strong><a href=https://applications-custom.vercel.app/reset-password?email=${email}> Please click. Here  for reset your password</a></strong>`,
             }
             const res= await sgMail.send(msg);
             return res;
