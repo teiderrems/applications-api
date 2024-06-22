@@ -178,4 +178,14 @@ export default class UserController{
         }
         return res.status(404).send('email address is required');
     }
+
+    public async resetPassword(req:Request,res:Response){
+        const {email,password }=req.body;
+        return await new  UserService().resetPassword(email,password);
+    }
+
+    public async confirmEmail(req:Request,res:Response){
+        const { email }=req.body;
+        return res.status(201).json(await new UserService().confirmEmail(email));
+    }
 }

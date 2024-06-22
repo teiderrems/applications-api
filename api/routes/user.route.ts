@@ -16,6 +16,8 @@ userRouter.put("/:id",multer().single('profile'),Authorize,new UserController().
 userRouter.delete("/:id",Authorize,new UserController().remove);
 userRouter.post("/login",new UserController().login);
 userRouter.post("/refresh_token",new UserController().refresh_token);
+userRouter.post('/reset-password',new UserController().resetPassword);
+userRouter.post("/confirm-email",new UserController().confirmEmail);
 
 
 

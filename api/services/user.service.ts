@@ -135,4 +135,40 @@ export default class UserService {
         return await new ApplicationService().findAll(user,page,skip);
     }
 
+    public async resetPassword(email:string,password:string){
+        try {
+            const result=await UserModel.findOneAndUpdate({Email:email},{Password:password});
+            sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
+            const msg = {
+                to: email,
+                from: process.env.EMAIL??'teidaremi0@gmail.com',
+                subject: 'Update Password',
+                text: 'Greeting',
+                html: `<strong>Your password account has been updated successfully.Click <a href=https://applications-custom.vercel.app/login> here </a> for continue </strong>`,
+            }
+            const res= await sgMail.send(msg);
+            return result;
+        }
+        catch (e:any) {
+            return e.message;
+        }
+    }
+
+    public async confirmEmail(email:string){
+        try {
+            sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
+            const msg = {
+                to: email,
+                from: process.env.EMAIL??'teidaremi0@gmail.com',
+                subject: 'Reset Password',
+                text: 'Welcome',
+                html: `<strong><a href=https://applications-custom.vercel.app/reset-password> Please click. Here  for reset your password</a></strong>`,
+            }
+            const res= await sgMail.send(msg);
+            return res;
+        }
+        catch (e:any) {
+            return e.message;
+        }
+    }
 }
