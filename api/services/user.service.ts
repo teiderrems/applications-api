@@ -137,7 +137,6 @@ export default class UserService {
     public async resetPassword(email:string,password:string){
         try { //https://applications-custom.vercel.app
             const salt=bcrypt.genSaltSync(10);
-            const result=await UserModel.updateOne({Email:email},{Password:bcrypt.hashSync(password,salt)});
             // sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
             // const msg = {
             //     to: email,
@@ -147,7 +146,7 @@ export default class UserService {
             //     html: `<strong> <a href=https://applications-custom.vercel.app/login>Your password account has been updated successfully.Click here for continue </a> </strong>`,
             // }
             // const res= await sgMail.send(msg);
-            return result;
+            return await UserModel.updateOne({Email:email},{Password:bcrypt.hashSync(password,salt)});
         }
         catch (e:any) {
             return e.message;
