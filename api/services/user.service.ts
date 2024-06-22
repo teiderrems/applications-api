@@ -137,7 +137,8 @@ export default class UserService {
 
     public async resetPassword(email:string,password:string){
         try {
-            const result=await UserModel.findOneAndUpdate({Email:email},{Password:password});
+            const salt=bcrypt.genSaltSync(10);
+            const result=await UserModel.updateOne({Email:email},{Password:bcrypt.hashSync(password,salt)});
             sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
             const msg = {
                 to: email,
