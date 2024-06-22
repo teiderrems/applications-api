@@ -144,7 +144,7 @@ export default class UserService {
                 from: process.env.EMAIL??'teidaremi0@gmail.com',
                 subject: 'Update Password',
                 text: 'Greeting',
-                html: `<strong>Your password account has been updated successfully.Click <a href=https://applications-custom.vercel.app/login> here </a> for continue </strong>`,
+                html: `<strong> <a href=https://applications-custom.vercel.app/login>Your password account has been updated successfully.Click here for continue </a> </strong>`,
             }
             const res= await sgMail.send(msg);
             return result;
