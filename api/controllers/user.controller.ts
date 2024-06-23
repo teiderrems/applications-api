@@ -181,7 +181,7 @@ export default class UserController{
 
     public async resetPassword(req:Request,res:Response){
         const {email,password }=req.body;
-        return await new  UserService().resetPassword(email,password);
+        return res.status(201).json(await new  UserService().resetPassword(email,password));
     }
 
     public async confirmEmail(req:Request,res:Response){
