@@ -55,7 +55,7 @@ export default class ApplicationService{
 
     public  async removeMany(array:[string]):Promise<any> {
         try {
-            return await ApplicationModel.deleteMany(array.map(i=>{_id:i}));
+            return array.map(async(i)=>await this.remove(i));
         }
         catch (e:any){
             return e.message;
