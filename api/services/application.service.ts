@@ -52,4 +52,13 @@ export default class ApplicationService{
             return error.message;
         }
     }
+
+    public  async removeMany(array:[string]):Promise<any> {
+        try {
+            return await ApplicationModel.deleteMany(array.map(i=>{_id:i}));
+        }
+        catch (e:any){
+            return e.message;
+        }
+    }
 }

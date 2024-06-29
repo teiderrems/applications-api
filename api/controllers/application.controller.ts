@@ -96,4 +96,21 @@ export default class ApplicationController{
         else
             return res.status(401).json({message:"Unauthorize"});
     }
+
+    public async removeMany(req:any,res:Response){
+        const {user}=req;
+        const {applications}=req.body;
+        let app;
+        app= await ApplicationModel.findOne({Owner:user?._id,_id:applications[0]});
+        if (app){
+            try {
+                return res.status(204).json(await new ApplicationService().removeMany(applications));
+
+            } catch (error:any) {
+                return res.status(404).json({message:error.message});
+            }
+        }
+        else
+            return res.status(401).json({message:"Unauthorize"});
+    }
 }
