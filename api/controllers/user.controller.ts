@@ -20,11 +20,7 @@ export default class UserController{
                 }=await new UserService().findAll(pageIn,skipIn,user.role==='instructor'?'student':role);
                 const val=pageIn*(skipIn);
 
-                return res.status(200).json({
-                    data:data,
-                    next:((data.count) && (data.count>skipIn))?`${req.protocol}/${req.headers.host}/api/applications?page=${(val<data.count)?(pageIn++):pageIn}&limit=${limit}`:null,
-                    prev:((data.count) && (data.count>skipIn))?`${req.protocol}/${req.headers.host}/api/applications?page=${(pageIn--)>0?(pageIn--):pageIn}&limit=${limit}`:null
-                });
+                return res.status(200).json(data);
             } catch (error: any) {
     
                 return res.status(404).json({message:error.message});
@@ -42,11 +38,7 @@ export default class UserController{
             let skipIn=parseInt(limit)?parseInt(limit):10;
             const data:any=await new UserService().findAllUserAndApplication(pageIn,skipIn,owner);
             const val=pageIn*(skipIn);
-            return res.status(200).json({
-                data:data,
-                next:((data.count) && (data.count>skipIn))?`${req.protocol}//${req.headers.host}/api/applications?page=${(val<data.count)?(pageIn++):pageIn}&limit=${limit}`:null,
-                prev:((data.count) && (data.count>skipIn))?`${req.protocol}//${req.headers.host}/api/applications?page=${(pageIn--)>0?(pageIn--):pageIn}&limit=${limit}`:null
-            });
+            return res.status(200).json(data);
         }
         return res.status(401).json({message:"UnAuthorize"});
     }
