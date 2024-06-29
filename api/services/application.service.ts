@@ -6,7 +6,7 @@ export default class ApplicationService{
         try {
             let offset:number=page*skip;
             
-            let data=status=='all'?await ApplicationModel.find({Owner:user}).limit(skip).skip(offset):await ApplicationModel.find({Owner:user,Status:status}).limit(skip).skip(offset);
+            let data=status==='all'?await ApplicationModel.find({Owner:user}).limit(skip).skip(offset):await ApplicationModel.find({Owner:user,Status:status}).limit(skip).skip(offset);
             return {
                 applications:data,
                 count:(await ApplicationModel.find({Owner:user})).length
