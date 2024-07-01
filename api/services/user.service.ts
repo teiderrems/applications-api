@@ -20,7 +20,7 @@ export default class UserService {
             let data=role=='all'?await UserModel.find({}).limit(skip).skip(offset):await UserModel.find({Role:role}).limit(skip).skip(offset);
             return {
                 users:data,
-                count:(await UserModel.find({})).length
+                count:role!=='all'?(await UserModel.find({Role:role})).length:(await UserModel.find({})).length
             };
         } catch (error:any) {
             return error.message;
