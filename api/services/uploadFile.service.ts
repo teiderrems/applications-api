@@ -35,7 +35,7 @@ export default class UploadFile{
         
         const content=new File([d],file?.originalname!,{type:file?.mimetype});
 
-        const res=await fetch(`${process.env.UPLOAD_URL!}/${id}?uploadType=media`,{
+        const res=await fetch(`${process.env.UPLOAD_URL!.split('?')[0]}/${id}?uploadType=media`,{
             method:'PATCH',
             body:content,
             headers:{

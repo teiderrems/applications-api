@@ -16,7 +16,7 @@ const Authorize=(req:any,res:Response,next:NextFunction)=>{
                 res.json({message:error.message});
                 return;
             }
-            decode={...decode,_id:decoded._id,role:decoded.role};
+            decode={...decode,_id:decoded._id,role:decoded.role,profileId:decoded.profileId};
         });
     }
     else{
@@ -25,7 +25,7 @@ const Authorize=(req:any,res:Response,next:NextFunction)=>{
     }
 
     if (decode) {
-        req.user={...req.user,_id:decode._id,role:decode.role};
+        req.user={...req.user,_id:decode._id,role:decode.role,profileId:decode.profileId};
         return next();
     }
     else{
