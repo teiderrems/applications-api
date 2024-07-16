@@ -60,24 +60,45 @@ export default class UserController{
     
     
     public async create(req: any, res: Response){
+
         if(req.body){
-            try {
-                const res=await new UploadFile().createFile(req.file);
-                if (res) {
-                    req.body.ProfileId=res;
+
+            if (req.file) {
+
+                try {
+                    const res=await new UploadFile().createFile(req.file);
+                    if (res) {
+                        req.body.ProfileId=res;
+                    }
+                } catch (error) {
+
+                    console.log(error);
+
                 }
-            } catch (error) {
-                console.log(error);
+                try {
+                    
+                    return res.status(201).json(await new UserService().create(req.body));
+        
+                } catch (error: any) {
+
+                    return res.status(404).json({message:error.message});
+                }
             }
-            try {
-                
-                return res.status(201).json(await new UserService().create(req.body));
-    
-            } catch (error: any) {
-                return res.status(404).json({message:error.message});
+            else{
+
+                try {
+                    
+                    return res.status(201).json(await new UserService().create(req.body));
+        
+                } catch (error: any) {
+
+                    return res.status(404).json({message:error.message});
+                    
+                }
             }
         }
         else{
+
             return res.status(404).json({message:"NotFound"});
         }
     }
