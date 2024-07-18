@@ -11,6 +11,7 @@ applicationRouter.post("/",Authorize,new ApplicationController().create);
 applicationRouter.put("/:id",Authorize,new ApplicationController().update);
 applicationRouter.delete("/:id",Authorize,new ApplicationController().remove);
 applicationRouter.delete("/",Authorize,new ApplicationController().removeMany);
+applicationRouter.post("/download",new ApplicationController().downloadLink);
 
 
 export default applicationRouter;

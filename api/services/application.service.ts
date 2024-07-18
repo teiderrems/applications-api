@@ -1,8 +1,9 @@
-import { ApplicationModel } from "../mocks/models";
+import { Application, ApplicationModel } from "../mocks/models";
+
 
 export default class ApplicationService{
 
-    public async findAll(user:String,page:number,skip:number,status='all'){
+    public async findAll(user:String,page:number,skip:number,status:any='all'){
         try {
             let offset:number=page*skip;
             
@@ -61,4 +62,11 @@ export default class ApplicationService{
             return e.message;
         }
     }
+
+    public async downloadFile(id:string,typeContrat:any=["alternance","stage","cdi","interim","cdd"]){
+        const data:Array<Application>=await ApplicationModel.find({Owner:id,TypeContrat:typeContrat});
+        return data;
+    }
+
+
 }

@@ -3,6 +3,7 @@ import {Request,Response} from "express"
 import ApplicationService from "../services/application.service"
 import { isValidObjectId } from "mongoose";
 import { ApplicationModel } from "../mocks/models";
+import * as XLSX from 'xlsx';
 
 
 export default class ApplicationController{
@@ -14,7 +15,6 @@ export default class ApplicationController{
             let pageIn=parseInt(page)?parseInt(page):0;
             let skipIn=parseInt(limit)?parseInt(limit):10;
             const data=await new ApplicationService().findAll(req.user._id,pageIn,skipIn,status);
-            const val=pageIn*(skipIn);
             return res.status(200).json(data);
             
         } catch (error:any) {
@@ -108,5 +108,27 @@ export default class ApplicationController{
         }
         else
             return res.status(401).json({message:"Unauthorize"});
+    }
+
+    public async downloadLink(req:Request,res:Response){
+        
+        const {type,id}=req.body;
+        try {
+            // Convertir l'objet JavaScript en une feuille de calcul
+            const data=await new ApplicationService().downloadFile(id as string,type)
+            // const worksheet = XLSX.utils.json_to_sheet(data);
+            //
+            // // Créer un nouveau classeur et y ajouter la feuille de calcul
+            // const workbook = XLSX.utils.book_new();
+            // XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+            //
+            // // Écrire le classeur dans un fichier Excel
+            // const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+            // const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+            return res.status(200).json(data);
+        } catch (error) {
+            console.log(error);
+            return res.status(404).json(error);
+        }
     }
 }
