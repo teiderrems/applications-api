@@ -3,7 +3,6 @@ import {Request,Response} from "express"
 import ApplicationService from "../services/application.service"
 import { isValidObjectId } from "mongoose";
 import { ApplicationModel } from "../mocks/models";
-import * as XLSX from 'xlsx';
 
 
 export default class ApplicationController{
